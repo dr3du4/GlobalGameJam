@@ -28,6 +28,4 @@ public class SplainTest : MonoBehaviour
         knot.Position = position;
         splineContainer.Splines[0][1] = knot;
     }
-
-    SplineInstantiate
 }
