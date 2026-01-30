@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 102716620}
   - component: {fileID: 102716619}
   - component: {fileID: 102716618}
+  - component: {fileID: 102716622}
   m_Layer: 0
   m_Name: "Spine GameObject (PRZ\xD3D ROBOCIK)"
   m_TagString: Untagged
@@ -253,6 +254,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &102716622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102716617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cc2718ec92bd784c9c994d86f5842a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovementSpine
+  speed: 5
+  skeletonAnimation: {fileID: 102716618}
+  idleAnimationName: animation
+  walkAnimationName: animation
 --- !u!1 &364176308
 GameObject:
   m_ObjectHideFlags: 0
@@ -529,8 +546,8 @@ GameObject:
   - component: {fileID: 1833388246}
   - component: {fileID: 1833388245}
   - component: {fileID: 1833388244}
-  - component: {fileID: 1833388243}
   - component: {fileID: 1833388248}
+  - component: {fileID: 1833388249}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -538,19 +555,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1833388243
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1833388242}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ce9977ae424ce74baf8cf12e04329cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  speed: 5
 --- !u!65 &1833388244
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -671,6 +675,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &1833388249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1833388242}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cc2718ec92bd784c9c994d86f5842a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovementSpine
+  speed: 5
+  skeletonAnimation: {fileID: 0}
+  idleAnimationName: idle
+  walkAnimationName: walk
 --- !u!1 &1890975776
 GameObject:
   m_ObjectHideFlags: 0
