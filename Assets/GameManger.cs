@@ -10,9 +10,9 @@ public class GameManger : MonoBehaviour
         instance = this;
     }
 
-    public void GenerateRoom(Vector3 positionDoor)
+    public void GenerateRoom(Vector3 positionDoor, Vector3 doorForward)
     {
-        roomGenerator.GenerateRoom(positionDoor);
+        roomGenerator.GenerateRoom(positionDoor, doorForward);
         Debug.Log("Room generated at: " + positionDoor);
     }
 }

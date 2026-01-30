@@ -7,8 +7,12 @@ public class Door : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            GameManger.instance.GenerateRoom(transform.position);
-            Debug.Log("Position of the door: " + transform.position);
+            // Use world position and forward direction
+            Vector3 worldPosition = transform.position;
+            Vector3 forwardDirection = transform.forward;
+            
+            GameManger.instance.GenerateRoom(worldPosition, forwardDirection);
+            Debug.Log("Door world position: " + worldPosition + ", forward: " + forwardDirection);
         }
     }
 }
