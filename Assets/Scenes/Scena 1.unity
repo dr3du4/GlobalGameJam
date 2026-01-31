@@ -329,7 +329,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &193627110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,16 +337,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 193627109}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cc2718ec92bd784c9c994d86f5842a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovementSpine
-  speed: 5
-  textureHolder: {fileID: 398708707}
   frontAnimator: {fileID: 0}
   backAnimator: {fileID: 0}
   sideAnimator: {fileID: 0}
+  speed: 5
 --- !u!65 &193627111
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -439,6 +438,140 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 398708707}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &220764917
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 220764920}
+  - component: {fileID: 220764918}
+  - component: {fileID: 220764919}
+  m_Layer: 0
+  m_Name: NetowrkGamaManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &220764918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220764917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 1557557364
+  PrefabGlobalObjectIdHash: 0
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  InstantiationData: []
+  <NetworkTransforms>k__BackingField: []
+  IsSpawnAuthority: 0
+  <NetworkRigidbodies>k__BackingField: []
+  <CurrentParent>k__BackingField: {fileID: 0}
+  DeferredDespawnTick: 0
+  Ownership: 1
+  NetworkManagerOwner: {fileID: 0}
+  <NetworkObjectId>k__BackingField: 0
+  <OwnerClientId>k__BackingField: 0
+  PreviousOwnerId: 0
+  AlwaysReplicateAsRoot: 0
+  <IsPlayerObject>k__BackingField: 0
+  SynchronizeTransform: 1
+  <IsSpawned>k__BackingField: 0
+  <DestroyWithScene>k__BackingField: 0
+  DestroyPendingSceneEvent: 0
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+  m_SceneOrigin:
+    m_Handle:
+      m_Value:
+        m_Data: 0
+  m_CachedParent: {fileID: 0}
+  m_CachedWorldPositionStays: 1
+  AuthorityAppliedParenting: 0
+  m_ChildNetworkBehaviours: []
+--- !u!114 &220764919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220764917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89d18a9c4a21bd64996793c5919ac72d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkGameManager
+  ShowTopMostFoldoutHeaderGroup: 1
+  m_NetworkManager: {fileID: 0}
+  <IsLocalPlayer>k__BackingField: 0
+  <IsOwner>k__BackingField: 0
+  <IsServer>k__BackingField: 0
+  <HasAuthority>k__BackingField: 0
+  <IsSessionOwner>k__BackingField: 0
+  <ServerIsHost>k__BackingField: 0
+  <IsClient>k__BackingField: 0
+  <IsHost>k__BackingField: 0
+  <IsOwnedByServer>k__BackingField: 0
+  <IsSpawned>k__BackingField: 0
+  m_NetworkObject: {fileID: 0}
+  <NetworkObjectId>k__BackingField: 0
+  <NetworkBehaviourId>k__BackingField: 0
+  NetworkBehaviourIdCache: 0
+  <OwnerClientId>k__BackingField: 0
+  m_VarInit: 0
+  <m_TargetIdBeingSynchronized>k__BackingField: 0
+  operatorSpawnPoint: {fileID: 0}
+  runnerSpawnPoint: {fileID: 0}
+  operatorPrefab: {fileID: 0}
+  runnerPrefab: {fileID: 0}
+  gameDuration: 300
+  OnGameStarted:
+    m_PersistentCalls:
+      m_Calls: []
+    m_CallsDirty: 1
+  OnGameEnded:
+    m_PersistentCalls:
+      m_Calls: []
+    m_CallsDirty: 1
+  OnTimerUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+    m_CallsDirty: 1
+  serverStartTime: {m_NetworkBehaviour: {fileID: 0}, m_NetworkManager: {fileID: 0}, m_NetworkObject: {fileID: 0}, m_UseServerTime: 0, <HasBeenInitialized>k__BackingField: 0, m_IsDirty: 0, <Name>k__BackingField: , InternalWritePerm: 0, NetworkUpdaterCheck: 0, m_InternalValue: 0, m_LastInternalValue: 0, m_PreviousValue: 0, m_HasPreviousValue: 0, m_IsDisposed: 0}
+  totalGameDuration: {m_NetworkBehaviour: {fileID: 0}, m_NetworkManager: {fileID: 0}, m_NetworkObject: {fileID: 0}, m_UseServerTime: 0, <HasBeenInitialized>k__BackingField: 0, m_IsDirty: 0, <Name>k__BackingField: , InternalWritePerm: 0, NetworkUpdaterCheck: 0, m_InternalValue: 0, m_LastInternalValue: 0, m_PreviousValue: 0, m_HasPreviousValue: 0, m_IsDisposed: 0}
+  isGameActive: {m_NetworkBehaviour: {fileID: 0}, m_NetworkManager: {fileID: 0}, m_NetworkObject: {fileID: 0}, m_UseServerTime: 0, <HasBeenInitialized>k__BackingField: 0, m_IsDirty: 0, <Name>k__BackingField: , InternalWritePerm: 0, NetworkUpdaterCheck: 0, m_InternalValue: 0, m_LastInternalValue: 0, m_PreviousValue: 0, m_HasPreviousValue: 0, m_IsDisposed: 0}
+  runnerClientId: {m_NetworkBehaviour: {fileID: 0}, m_NetworkManager: {fileID: 0}, m_NetworkObject: {fileID: 0}, m_UseServerTime: 0, <HasBeenInitialized>k__BackingField: 0, m_IsDirty: 0, <Name>k__BackingField: , InternalWritePerm: 0, NetworkUpdaterCheck: 0, m_InternalValue: 0, m_LastInternalValue: 0, m_PreviousValue: 0, m_HasPreviousValue: 0, m_IsDisposed: 0}
+  operatorClientId: {m_NetworkBehaviour: {fileID: 0}, m_NetworkManager: {fileID: 0}, m_NetworkObject: {fileID: 0}, m_UseServerTime: 0, <HasBeenInitialized>k__BackingField: 0, m_IsDirty: 0, <Name>k__BackingField: , InternalWritePerm: 0, NetworkUpdaterCheck: 0, m_InternalValue: 0, m_LastInternalValue: 0, m_PreviousValue: 0, m_HasPreviousValue: 0, m_IsDisposed: 0}
+  rolesAssigned: 0
+--- !u!4 &220764920
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220764917}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.34086, y: 5.2173, z: -3.62725}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &251439327
@@ -833,11 +966,12 @@ Transform:
   m_GameObject: {fileID: 500785451}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.55, y: 3.09, z: 1.2}
+  m_LocalPosition: {x: -5.53, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1694431906}
+  - {fileID: 1635028332}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &500785456
@@ -853,6 +987,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CableHolder
   interactionRange: 2
+  cableColor: 0
   cableSplineContainer: {fileID: 1694431904}
   cableSag: 0.5
   splineResolution: 20
@@ -1214,6 +1349,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e7c3064b3ae672d8977d888a99b9e5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridMovement
+  frontAnimator: {fileID: 0}
+  backAnimator: {fileID: 0}
+  sideAnimator: {fileID: 0}
   moveSpeed: 5
   gridSize: 1
   gridWidth: 10
@@ -1306,7 +1444,7 @@ Transform:
   m_GameObject: {fileID: 1194051149}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.03, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1725,6 +1863,285 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 667619f974b20f94f914c8def5fdfdf8, type: 3}
+--- !u!1 &1635028326
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1635028332}
+  - component: {fileID: 1635028327}
+  - component: {fileID: 1635028331}
+  - component: {fileID: 1635028330}
+  - component: {fileID: 1635028329}
+  - component: {fileID: 1635028328}
+  - component: {fileID: 1635028333}
+  m_Layer: 0
+  m_Name: Spline
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1635028327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635028326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab5c7d4c32e743048dfca98e2d5914f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Splines::UnityEngine.Splines.SplineContainer
+  m_Spline:
+    m_EditModeType: 1
+    m_Knots: []
+    m_MetaData: []
+    m_Closed: 0
+    m_IntData:
+      m_Data: []
+    m_FloatData:
+      m_Data: []
+    m_Float4Data:
+      m_Data: []
+    m_ObjectData:
+      m_Data: []
+  m_Splines:
+  - m_EditModeType: 1
+    m_Knots:
+    - Position:
+        x: 0
+        y: 0
+        z: 0
+      TangentIn:
+        x: -0
+        y: -0
+        z: -0.1
+      TangentOut:
+        x: 0
+        y: 0
+        z: 0.1
+      Rotation:
+        value:
+          x: -0.70710677
+          y: 0
+          z: -0
+          w: 0.70710677
+    - Position:
+        x: 0
+        y: 1
+        z: 0
+      TangentIn:
+        x: -0
+        y: -0
+        z: -0.29562488
+      TangentOut:
+        x: 0
+        y: 0
+        z: 0.49717984
+      Rotation:
+        value:
+          x: -0.39224368
+          y: 0.31007236
+          z: 0.046264887
+          w: 0.8647887
+    - Position:
+        x: 2
+        y: 1
+        z: 2
+      TangentIn:
+        x: -0
+        y: -0
+        z: -0.49717984
+      TangentOut:
+        x: 0
+        y: 0
+        z: 0.29562488
+      Rotation:
+        value:
+          x: 0.37471515
+          y: 0.3310416
+          z: -0.093448326
+          w: 0.8609689
+    - Position:
+        x: 2
+        y: 0
+        z: 2
+      TangentIn:
+        x: -0
+        y: -0
+        z: -0.1
+      TangentOut:
+        x: 0
+        y: 0
+        z: 0.1
+      Rotation:
+        value:
+          x: 0.6767663
+          y: -0.2049084
+          z: 0.2049084
+          w: 0.6767663
+    m_MetaData:
+    - Mode: 0
+      Tension: 0.5
+    - Mode: 0
+      Tension: 0.5
+    - Mode: 0
+      Tension: 0.5
+    - Mode: 0
+      Tension: 0.5
+    m_Closed: 0
+    m_IntData:
+      m_Data: []
+    m_FloatData:
+      m_Data: []
+    m_Float4Data:
+      m_Data: []
+    m_ObjectData:
+      m_Data: []
+  m_Knots:
+    m_KnotsLink: []
+--- !u!114 &1635028328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635028326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 222dc08d484f16869bdd89edd9d368fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Splines::UnityEngine.Splines.SplineExtrude
+  m_Container: {fileID: 1635028327}
+  m_TargetMesh: {fileID: 0}
+  m_RebuildOnSplineChange: 1
+  m_RebuildFrequency: 30
+  m_UpdateColliders: 1
+  m_Sides: 8
+  m_SegmentsPerUnit: 8
+  m_Capped: 1
+  m_Radius: 0.01
+  m_Range: {x: 0, y: 1}
+  m_FlipNormals: 0
+  m_Shape:
+    rid: 3929483729919803593
+  references:
+    version: 2
+    RefIds:
+    - rid: 3929483729919803593
+      type: {class: Circle, ns: UnityEngine.Splines.ExtrusionShapes, asm: Unity.Splines}
+      data:
+        m_Sides: 8
+--- !u!114 &1635028329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635028326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2081d7c088d984c1685dfe2a3ffb4850, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SplainTest
+  xFrequency: 0.875
+  yFrequency: 1.25
+  yPhase: 2
+  zFrequency: 0.8125
+  zPhase: 1
+--- !u!23 &1635028330
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635028326}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 1eb8eb02854b7f3659d88060b89215b9, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1635028331
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635028326}
+  m_Mesh: {fileID: 0}
+--- !u!4 &1635028332
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635028326}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 5.53, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 500785455}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1635028333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635028326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3f7aac34e8af2c49b31c12c56dd063d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CableVisualizer
+  cableMaterial: {fileID: 2100000, guid: 1eb8eb02854b7f3659d88060b89215b9, type: 2}
+  cableRadius: 0.05
+  radialSegments: 8
+  lengthSegments: 50
 --- !u!1 &1639348581
 GameObject:
   m_ObjectHideFlags: 0
@@ -1852,6 +2269,75 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1001 &1690377938
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 947464683495422532, guid: e56b17caf3081def3b30f0f902b74626, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 947464683495422532, guid: e56b17caf3081def3b30f0f902b74626, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 947464683495422532, guid: e56b17caf3081def3b30f0f902b74626, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 947464683495422532, guid: e56b17caf3081def3b30f0f902b74626, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 947464683495422532, guid: e56b17caf3081def3b30f0f902b74626, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 947464683495422532, guid: e56b17caf3081def3b30f0f902b74626, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 947464683495422532, guid: e56b17caf3081def3b30f0f902b74626, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 947464683495422532, guid: e56b17caf3081def3b30f0f902b74626, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 947464683495422532, guid: e56b17caf3081def3b30f0f902b74626, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 947464683495422532, guid: e56b17caf3081def3b30f0f902b74626, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 960795684993972340, guid: e56b17caf3081def3b30f0f902b74626, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5249651102347479665, guid: e56b17caf3081def3b30f0f902b74626, type: 3}
+      propertyPath: m_Name
+      value: CableEnjoyer
+      objectReference: {fileID: 0}
+    - target: {fileID: 6949297151677835331, guid: e56b17caf3081def3b30f0f902b74626, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8799667057512711523, guid: e56b17caf3081def3b30f0f902b74626, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e56b17caf3081def3b30f0f902b74626, type: 3}
 --- !u!1 &1694431903
 GameObject:
   m_ObjectHideFlags: 0
@@ -1869,7 +2355,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1694431904
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1922,7 +2408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3f7aac34e8af2c49b31c12c56dd063d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CableVisualizer
-  cableMaterial: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  cableMaterial: {fileID: 2100000, guid: 1eb8eb02854b7f3659d88060b89215b9, type: 2}
   cableRadius: 0.05
   radialSegments: 8
   lengthSegments: 50
@@ -1941,6 +2427,129 @@ Transform:
   m_Children: []
   m_Father: {fileID: 500785455}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1840685812
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1840685815}
+  - component: {fileID: 1840685817}
+  - component: {fileID: 1840685816}
+  m_Layer: 0
+  m_Name: NetworkManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1840685815
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1840685812}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.34086, y: 5.2173, z: -3.62725}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1840685816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1840685812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 593a2fe42fa9d37498c96f9a383b6521, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkManager
+  NetworkManagerExpanded: 0
+  <DistributedAuthorityMode>k__BackingField: 0
+  ClientsToRedistribute: []
+  RedistributeToClients: 0
+  DeferredDespawnObjects: []
+  <CurrentSessionOwner>k__BackingField: 0
+  ServerShutdownState: 0
+  m_ShutdownTimeout: 0
+  m_ShuttingDown: 0
+  NetworkConfig:
+    ProtocolVersion: 0
+    NetworkTransport: {fileID: 1840685817}
+    PlayerPrefab: {fileID: 0}
+    Prefabs:
+      NetworkPrefabsLists:
+      - {fileID: 11400000, guid: f1d21ff67cd0bb248b0dae102a12ab8c, type: 2}
+    TickRate: 30
+    ClientConnectionBufferTimeout: 10
+    ConnectionApproval: 0
+    ConnectionData: []
+    EnableTimeResync: 0
+    TimeResyncInterval: 30
+    EnsureNetworkVariableLengthSafety: 0
+    EnableSceneManagement: 1
+    ForceSamePrefabs: 1
+    RecycleNetworkIds: 1
+    NetworkIdRecycleDelay: 120
+    RpcHashSize: 0
+    LoadSceneTimeOut: 120
+    SpawnTimeout: 10
+    EnableNetworkLogs: 1
+    NetworkTopology: 0
+    UseCMBService: 0
+    AutoSpawnPlayerPrefabClientSide: 1
+    NetworkProfilingMetrics: 1
+    OldPrefabList: []
+  RunInBackground: 1
+  LogLevel: 1
+--- !u!114 &1840685817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1840685812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6960e84d07fb87f47956e7a81d71c4e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Transports.UTP.UnityTransport
+  <DisconnectEvent>k__BackingField: 0
+  <DisconnectEventMessage>k__BackingField: 
+  m_ProtocolType: 0
+  m_UseWebSockets: 0
+  m_UseEncryption: 0
+  m_MaxPacketQueueSize: 128
+  m_MaxPayloadSize: 6144
+  m_MaxSendQueueSize: 0
+  m_HeartbeatTimeoutMS: 500
+  m_ConnectTimeoutMS: 1000
+  m_MaxConnectAttempts: 60
+  m_DisconnectTimeoutMS: 30000
+  ConnectionData:
+    Address: 127.0.0.1
+    Port: 7777
+    ServerListenAddress: 127.0.0.1
+    ClientBindPort: 0
+  DebugSimulator:
+    PacketDelayMS: 0
+    PacketJitterMS: 0
+    PacketDropRate: 0
+  m_ServerClientId: 0
+  m_NetworkManager: {fileID: 0}
+  m_HasForcedConnectionData: 0
+  m_ServerPrivateKey: 
+  m_ServerCertificate: 
+  m_ServerCommonName: 
+  m_ClientCaCertificate: 
 --- !u!1001 &1892188783
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2224,8 +2833,8 @@ Transform:
   m_GameObject: {fileID: 1978383375}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.362, y: 3.09, z: 1.2}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 4.579, y: 0, z: 0}
+  m_LocalScale: {x: 2.242, y: 2.4141, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -2243,6 +2852,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ServerConnection
   connectionRange: 2
+  serverColor: 2
   isCableConnected: 0
   connectedIndicator: {fileID: 0}
   tileLightCircuit: 0
@@ -2270,3 +2880,6 @@ SceneRoots:
   - {fileID: 1536351590}
   - {fileID: 1284042155}
   - {fileID: 1473170707}
+  - {fileID: 1840685815}
+  - {fileID: 220764920}
+  - {fileID: 1690377938}

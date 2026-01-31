@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GridMovement : MonoBehaviour
+public class GridMovement : AbstractPlayer
 {
     [SerializeField] private float moveSpeed = 2f;
     [SerializeField] private float gridSize = 1f;
@@ -11,16 +11,17 @@ public class GridMovement : MonoBehaviour
     private Vector3 targetPosition;
     private bool isMoving = false;
 
-    void Start()
+    void Awake()
     {
-        // Initialize to current position, snapped to grid
+        SetDefaultAnim();
         targetPosition = transform.position;
     }
 
-    void Update()
+    override protected void MyUpdate()
     {
         if (!isMoving)
         {
+            SetWalking(false);
             Vector2 input = GameManager.instance.inputActions.Player.Move.ReadValue<Vector2>();
             
             // Only move in one direction at a time (X-Z plane)
@@ -51,7 +52,9 @@ public class GridMovement : MonoBehaviour
         }
         else
         {
+            SetWalking(true);
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+            Debug.Log($"{transform.position}");
             
             if (Vector3.Distance(transform.position, targetPosition) < 0.01f)
             {
@@ -59,5 +62,13 @@ public class GridMovement : MonoBehaviour
                 isMoving = false;
             }
         }
+        Vector3 moveDirection3D = (targetPosition - transform.position).normalized;
+        UpdateAnimationDirection(new Vector2(moveDirection3D.x, moveDirection3D.z));
+    }
+
+    public void HandleDangerCollision(Danger danger)
+    {
+        SetDefaultAnim();
+        Debug.Log($"Collided with danger of type: {danger.Type} on circuit: {danger.LightCircuit}");
     }
 }

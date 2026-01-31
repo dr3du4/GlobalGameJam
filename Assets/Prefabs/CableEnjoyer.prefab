@@ -325,6 +325,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6875789028178927953}
+  - component: {fileID: 1021864625740867415}
   m_Layer: 0
   m_Name: TextureHolder
   m_TagString: Untagged
@@ -350,6 +351,18 @@ Transform:
   - {fileID: 8328493376465489336}
   m_Father: {fileID: 947464683495422532}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1021864625740867415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4070254080935768573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad38f1a8b92603c11a15e24522708678, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Banner
 --- !u!1 &5249651102347479665
 GameObject:
   m_ObjectHideFlags: 0
@@ -396,11 +409,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cc2718ec92bd784c9c994d86f5842a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovementSpine
-  speed: 5
-  textureHolder: {fileID: 6875789028178927953}
   frontAnimator: {fileID: 6154750221629091044}
   backAnimator: {fileID: 1547846352115337938}
   sideAnimator: {fileID: 7698850382474596887}
+  speed: 5
 --- !u!65 &6996397229685464715
 BoxCollider:
   m_ObjectHideFlags: 0

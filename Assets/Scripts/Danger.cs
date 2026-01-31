@@ -26,7 +26,7 @@ public class Danger : MonoBehaviour
     {
         if (dangerCollider.enabled && dangerCollider.bounds.Intersects(playerCollider.bounds))
         {
-            playerCollider.GetComponent<MovementSpine>()?.HandleDangerCollision(this);
+            playerCollider.GetComponent<GridMovement>()?.HandleDangerCollision(this);
         }
     }
 

@@ -46,8 +46,8 @@ public class GameManager : MonoBehaviour
         isCableEnjoyerChosen = true;
         mainCamera.enabled = true;
         secondCamera.enabled = false;
-        FindFirstObjectByType<MovementSpine>().enabled = true;
-        FindFirstObjectByType<GridMovement>().enabled = false;
+        if (FindFirstObjectByType<MovementSpine>() is MovementSpine movementSpine) movementSpine.enabled = true;
+        if (FindFirstObjectByType<GridMovement>() is GridMovement gridMovement) gridMovement.enabled = false;
     }
 
     void SwitchToGridWalker()
@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour
         isCableEnjoyerChosen = false;
         mainCamera.enabled = false;
         secondCamera.enabled = true;
-        FindFirstObjectByType<GridMovement>().enabled = true;
-        FindFirstObjectByType<MovementSpine>().enabled = false;
+        if (FindFirstObjectByType<GridMovement>() is GridMovement gridMovement) gridMovement.enabled = true;
+        if (FindFirstObjectByType<MovementSpine>() is MovementSpine movementSpine) movementSpine.enabled = false;
     }
 }
