@@ -146,4 +146,9 @@ public class MovementSpine : MonoBehaviour
             Debug.LogWarning($"Skin '{skinName}' not found!");
         }
     }
+
+    public void HandleDangerCollision(Danger danger)
+    {
+        Debug.Log($"Collided with danger of type: {danger.Type} on circuit: {danger.LightCircuit}");
+    }
 }

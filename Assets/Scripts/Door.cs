@@ -1,4 +1,4 @@
-Assets/Scripts/Tile.csusing UnityEngine;
+using UnityEngine;
 
 public class Door : MonoBehaviour
 {

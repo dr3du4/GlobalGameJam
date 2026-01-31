@@ -2,35 +2,38 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    public TileDanger tileDanger;
-    public TileLight tileLightType;
+    [SerializeField] private LightCircuit lightCircuit;
     [Space]
-    [SerializeField] private Light tileLight;
-    [SerializeField] private MeshFilter safeMesh;
-    [SerializeField] private MeshFilter hazardMesh;
+    [SerializeField] private MeshRenderer tileMeshRenderer;
 
-    private bool isSafe = true;
+    public LightCircuit Circuit => lightCircuit;
 
-    public void SetSafe(bool isSafe)
+    public void SetTileVisible(bool isVisible)
     {
-        this.isSafe = isSafe;
+        tileMeshRenderer.enabled = isVisible;
     }
 
-    public void SetLight(bool isOn)
+    public enum LightCircuit
     {
-        tileLight.enabled = isOn;
+        Red,
+        Green,
+        Blue,
+        Yellow
     }
 
-    public enum TileDanger
+    void OnDrawGizmos()
     {
-        Safe,
-        Hazard1,
-        Hazard2
-    }
+        Color gizmoColor = lightCircuit switch
+        {
+            LightCircuit.Red => Color.red,
+            LightCircuit.Green => Color.green,
+            LightCircuit.Blue => Color.blue,
+            LightCircuit.Yellow => Color.yellow,
+            _ => Color.white
+        };
+        gizmoColor.a = 0.5f;
 
-    public enum TileLight
-    {
-        CircuitA,
-        CircuitB
+        Gizmos.color = gizmoColor;
+        Gizmos.DrawCube(transform.position + new Vector3(0.21f, 0.5f, 0f), new Vector3(0.4f, 0.01f, 0.8f));
     }
 }

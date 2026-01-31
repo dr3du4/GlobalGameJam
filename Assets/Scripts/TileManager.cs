@@ -3,24 +3,52 @@ using UnityEngine;
 public class TileManager : MonoBehaviour
 {
     Tile[] tiles;
+    Danger[] dangers;
     void Awake()
     {
         tiles = FindObjectsByType<Tile>(FindObjectsSortMode.None);
-    }
-
-    public void UpdateDanger(Tile.TileDanger danger)
-    {
+        dangers = FindObjectsByType<Danger>(FindObjectsSortMode.None);
         foreach (var tile in tiles)
         {
-            tile.SetSafe(tile.tileDanger != danger);
+            tile.SetTileVisible(false);
+        }
+        foreach (var danger in dangers)
+        {
+            danger.SetDangerActive(false);
+            danger.SetDangerVisible(false);
         }
     }
 
-    public void UpdateLight(Tile.TileLight lightType)
+    public void SetupDangers(Danger.DangerType dangerType)
     {
+        foreach(var danger in dangers)
+        {
+            danger.SetDangerActive(false);
+            if (danger.Type == dangerType)
+            {
+                danger.SetDangerActive(true);
+            }
+        }
+    }
+
+    public void SetupLights(Tile.LightCircuit circuit)
+    {
+        foreach (var danger in dangers)
+        {
+            danger.SetDangerVisible(false);
+            if (danger.LightCircuit == circuit)
+            {
+                danger.SetDangerVisible(true);
+            }
+        }
+
         foreach (var tile in tiles)
         {
-            tile.SetLight(tile.tileLightType == lightType);
+            tile.SetTileVisible(false);
+            if (tile.Circuit == circuit)
+            {
+                tile.SetTileVisible(true);
+            }
         }
     }
 }
