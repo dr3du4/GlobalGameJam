@@ -1,17 +1,21 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class GameManger : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
-    public static GameManger instance;
 
     public bool useFirstMap = true;
     private bool wasSpacePressed = false;
+    public static GameManager instance;
+    public RoomGenerator roomGenerator;
+    public InputSystem_Actions inputActions;
 
     void Awake()
     {
         instance = this;
         useFirstMap = true;
+        inputActions = new InputSystem_Actions();
+        inputActions.Player.Enable();
     }
 
     void Update()
