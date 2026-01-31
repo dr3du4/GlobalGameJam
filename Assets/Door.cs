@@ -8,7 +8,7 @@ public class Door : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             
-            GameManger.instance.GenerateRoom(transform.position);
+            Debug.Log("Door triggered");
         }
     }
 }

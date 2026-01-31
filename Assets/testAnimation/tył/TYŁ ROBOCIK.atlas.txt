@@ -1,0 +1,55 @@
+TYŁ ROBOCIK.png
+size:349,527
+filter:Linear,Linear
+pma:true
+scale:0.6
+arm L
+bounds:2,36,68,128
+armR
+bounds:191,309,73,147
+rotate:90
+body
+bounds:2,289,112,187
+offsets:1,0,113,187
+rotate:90
+handL
+bounds:2,2,45,32
+offsets:1,1,47,34
+handR
+bounds:283,112,52,41
+offsets:0,1,52,43
+rotate:90
+head DOWN
+bounds:198,384,141,149
+offsets:1,1,142,150
+rotate:90
+head UP
+bounds:191,166,141,144
+offsets:1,1,142,146
+rotate:90
+legL
+bounds:224,10,56,100
+offsets:0,0,60,100
+legR
+bounds:72,5,57,104
+offsets:0,0,57,107
+scarf down
+bounds:72,111,107,58
+offsets:0,0,107,59
+scarf front
+bounds:2,169,118,65
+rotate:90
+scarf long
+bounds:2,403,122,194
+rotate:90
+upperleg R
+bounds:282,13,55,97
+upperlegL
+bounds:181,112,52,100
+rotate:90
+wtyczka
+bounds:72,171,117,116
+offsets:0,1,118,118
+wtyczka głowa
+bounds:131,7,102,91
+rotate:90

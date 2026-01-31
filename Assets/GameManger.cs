@@ -1,18 +1,32 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManger : MonoBehaviour
 {
     public static GameManger instance;
-    public RoomGenerator roomGenerator;
+
+    public bool useFirstMap = true;
+    private bool wasSpacePressed = false;
 
     void Awake()
     {
         instance = this;
+        useFirstMap = true;
     }
 
-    public void GenerateRoom(Vector3 positionDoor)
+    void Update()
     {
-        roomGenerator.GenerateRoom(positionDoor);
-        Debug.Log("Room generated at: " + positionDoor);
+        if (Keyboard.current != null)
+        {
+            bool isSpacePressed = Keyboard.current.spaceKey.isPressed;
+           
+            if (isSpacePressed && !wasSpacePressed)
+            {
+                Debug.Log("Use first map: " + useFirstMap);
+                useFirstMap = !useFirstMap;
+            }
+            
+            wasSpacePressed = isSpacePressed;
+        }
     }
 }

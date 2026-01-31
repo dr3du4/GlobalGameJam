@@ -1,0 +1,59 @@
+BOK ROBOCIK.png
+size:325,512
+filter:Linear,Linear
+pma:true
+scale:0.6
+arm L
+bounds:173,336,59,150
+rotate:90
+arm R
+bounds:173,276,58,148
+rotate:90
+body
+bounds:2,398,112,187
+offsets:1,0,113,187
+rotate:90
+eye
+bounds:18,4,10,27
+offsets:0,1,10,28
+rotate:90
+eye closed
+bounds:47,6,19,8
+offsets:0,0,20,8
+hand DOWN
+bounds:191,397,126,113
+hand L
+bounds:241,90,53,44
+offsets:1,0,55,44
+hand R
+bounds:241,45,52,43
+offsets:1,1,54,44
+head UP
+bounds:173,136,138,144
+offsets:1,1,140,146
+rotate:90
+leg L
+bounds:69,106,56,99
+offsets:4,0,60,100
+rotate:90
+leg R
+bounds:69,5,56,99
+offsets:4,0,60,100
+mouth
+bounds:2,2,14,12
+scarf back
+bounds:2,148,107,58
+offsets:0,0,107,59
+rotate:90
+scarf long
+bounds:2,257,139,169
+rotate:90
+szal front
+bounds:2,16,118,65
+rotate:90
+upperleg L
+bounds:127,7,55,97
+upperleg R
+bounds:184,37,55,97
+wtyczka plugged
+bounds:69,164,102,91
