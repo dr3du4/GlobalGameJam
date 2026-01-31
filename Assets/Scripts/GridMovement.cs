@@ -65,4 +65,10 @@ public class GridMovement : AbstractPlayer
         Vector3 moveDirection3D = (targetPosition - transform.position).normalized;
         UpdateAnimationDirection(new Vector2(moveDirection3D.x, moveDirection3D.z));
     }
+
+    public void HandleDangerCollision(Danger danger)
+    {
+        SetDefaultAnim();
+        Debug.Log($"Collided with danger of type: {danger.Type} on circuit: {danger.LightCircuit}");
+    }
 }

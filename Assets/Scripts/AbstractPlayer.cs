@@ -72,10 +72,4 @@ public abstract class AbstractPlayer : MonoBehaviour
         currentAnimator = animator;
         currentAnimator.gameObject.SetActive(true);
     }
-
-    public void HandleDangerCollision(Danger danger)
-    {
-        SetActiveAnimation(frontAnimator);
-        Debug.Log($"Collided with danger of type: {danger.Type} on circuit: {danger.LightCircuit}");
-    }
 }
