@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Cylinder
+  m_Name: Cylinder 1
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -117,9 +117,9 @@ Material:
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 1, g: 0.92, b: 0.016, a: 1}
-    - _Color: {r: 1, g: 0.92, b: 0.016, a: 1}
-    - _EmissionColor: {r: 1.528302, g: 1.4135351, b: 0.09371667, a: 0.3}
+    - _BaseColor: {r: 0.015686274, g: 1, b: 0.033876687, a: 1}
+    - _Color: {r: 0.015686274, g: 1, b: 0.033876687, a: 1}
+    - _EmissionColor: {r: 0.3095409, g: 0.8867924, b: 0.020914912, a: 0.3}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

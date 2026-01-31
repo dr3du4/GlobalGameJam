@@ -22,12 +22,15 @@ public class CableHolder : MonoBehaviour
     
     [Header("References")]
     public Transform cableStartPoint; // The point where cable starts from this holder
+    public string emissiveMaterialName = "emmisive"; // Name of the emissive material
+    public CableVisualizer templateVisualizer; // Template to copy materials from (optional)
     
     private Transform player;
     private bool isPlayerNearby = false;
     private bool isCableHeld = false;
     private GameObject connectedServer = null;
     private Spline cableSpline;
+    private Material emissiveMaterial;
     
     void Start()
     {
@@ -46,8 +49,16 @@ public class CableHolder : MonoBehaviour
             CableVisualizer visualizer = splineObject.AddComponent<CableVisualizer>();
             visualizer.cableRadius = 0.05f;
             
-            // Set cable color based on holder color
-            UpdateCableColor(visualizer);
+            // Copy material references from template if available
+            if (templateVisualizer != null)
+            {
+                visualizer.yellowCableMaterial = templateVisualizer.yellowCableMaterial;
+                visualizer.redCableMaterial = templateVisualizer.redCableMaterial;
+                visualizer.greenCableMaterial = templateVisualizer.greenCableMaterial;
+                visualizer.blueCableMaterial = templateVisualizer.blueCableMaterial;
+            }
+            
+            // The visualizer will select the right material in its Start() based on cableColor
         }
         
         // Create initial spline
@@ -58,12 +69,7 @@ public class CableHolder : MonoBehaviour
             cableSplineContainer.Spline = cableSpline;
         }
         
-        // Update color if visualizer already exists
-        CableVisualizer existingVisualizer = cableSplineContainer.GetComponent<CableVisualizer>();
-        if (existingVisualizer != null)
-        {
-            UpdateCableColor(existingVisualizer);
-        }
+        // Visualizer will select the correct material in its Start() based on cableColor
         
         // Set cable start point to this object if not assigned
         if (cableStartPoint == null)
@@ -73,6 +79,46 @@ public class CableHolder : MonoBehaviour
         
         // Hide spline initially
         cableSplineContainer.gameObject.SetActive(false);
+        
+        // Find and update emissive material color on holder
+        FindAndUpdateEmissiveMaterial();
+    }
+    
+    void FindAndUpdateEmissiveMaterial()
+    {
+        // Get all renderers in this object and children
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        
+        foreach (Renderer renderer in renderers)
+        {
+            foreach (Material mat in renderer.materials)
+            {
+                // Check if material name contains "emmisive" or "emissive"
+                if (mat.name.ToLower().Contains("emmisive") || mat.name.ToLower().Contains("emissive"))
+                {
+                    emissiveMaterial = mat;
+                    UpdateHolderEmissiveColor();
+                    return;
+                }
+            }
+        }
+        
+        Debug.LogWarning($"Emissive material not found on CableHolder: {gameObject.name}");
+    }
+    
+    void UpdateHolderEmissiveColor()
+    {
+        if (emissiveMaterial == null) return;
+        
+        Color color = GetColorFromEnum(cableColor);
+        
+        // Set base color
+        emissiveMaterial.color = color;
+        emissiveMaterial.SetColor("_Color", color);
+        
+        // Set emission color for glow effect
+        emissiveMaterial.EnableKeyword("_EMISSION");
+        emissiveMaterial.SetColor("_EmissionColor", color * 2f); // Brighter emission
     }
     
     void Update()
@@ -252,27 +298,6 @@ public class CableHolder : MonoBehaviour
         return cableColor;
     }
     
-    void UpdateCableColor(CableVisualizer visualizer)
-    {
-        if (visualizer == null) return;
-        
-        Color color = GetColorFromEnum(cableColor);
-        
-        // Create new material instance to avoid changing the original asset
-        if (visualizer.cableMaterial == null)
-        {
-            visualizer.cableMaterial = new Material(Shader.Find("Standard"));
-        }
-        
-        // Set both base color and emission
-        visualizer.cableMaterial.color = color;
-        visualizer.cableMaterial.SetColor("_Color", color);
-        
-        // Make it slightly emissive for visibility
-        visualizer.cableMaterial.EnableKeyword("_EMISSION");
-        visualizer.cableMaterial.SetColor("_EmissionColor", color * 0.3f);
-    }
-    
     Color GetColorFromEnum(CableColor color)
     {
         switch (color)
@@ -292,14 +317,10 @@ public class CableHolder : MonoBehaviour
     
     void OnValidate()
     {
-        // Update cable color when values change in inspector
-        if (Application.isPlaying && cableSplineContainer != null)
+        // Update holder emissive color when values change in inspector
+        if (Application.isPlaying)
         {
-            CableVisualizer visualizer = cableSplineContainer.GetComponent<CableVisualizer>();
-            if (visualizer != null)
-            {
-                UpdateCableColor(visualizer);
-            }
+            FindAndUpdateEmissiveMaterial();
         }
     }
     

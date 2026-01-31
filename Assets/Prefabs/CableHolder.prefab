@@ -120,6 +120,10 @@ MonoBehaviour:
   cableRadius: 0.05
   radialSegments: 8
   lengthSegments: 50
+  yellowCableMaterial: {fileID: 2100000, guid: 1eb8eb02854b7f3659d88060b89215b9, type: 2}
+  redCableMaterial: {fileID: 2100000, guid: 53e64bd34ade2e240a477764a587b2fa, type: 2}
+  greenCableMaterial: {fileID: 2100000, guid: 3eae98ab927ba7f40a571f7af70ff27a, type: 2}
+  blueCableMaterial: {fileID: 2100000, guid: 3e115a3d7b9293641a11d5bcc9a5609f, type: 2}
 --- !u!1001 &8578474314996486150
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -238,3 +242,5 @@ MonoBehaviour:
   cableSag: 0.2
   splineResolution: 10
   cableStartPoint: {fileID: 4163779313746663873}
+  emissiveMaterialName: emmisive
+  templateVisualizer: {fileID: 6199401607690762440}
