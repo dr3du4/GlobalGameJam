@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Unity.Netcode;
 
 public class ServerConnection : MonoBehaviour
 {
@@ -14,32 +13,14 @@ public class ServerConnection : MonoBehaviour
     [SerializeField] private Tile.LightCircuit tileLightCircuit;
     [SerializeField] private Danger.DangerType dangerType;
     
-    [Header("Network Integration")]
-    [SerializeField] private NetworkCableInteraction networkCableInteraction;
-    
     private Transform player;
     private CableHolder nearbyCable = null;
     private bool isPlayerNearby = false;
-    private bool useNetworking = false;
     
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
-        
-        // Check if we're in networked mode
-        useNetworking = NetworkManager.Singleton != null && NetworkManager.Singleton.IsClient;
-        
-        // Only subscribe to input if GameManager exists (non-networked mode)
-        if (GameManager.instance != null)
-        {
-            GameManager.instance.inputActions.Player.Interact.performed += OnInteractPressed;
-        }
-        
-        // Auto-find NetworkCableInteraction if not assigned
-        if (networkCableInteraction == null)
-        {
-            networkCableInteraction = GetComponent<NetworkCableInteraction>();
-        }
+        GameManager.instance.inputActions.Player.Interact.performed += OnInteractPressed;
         
         // Make sure this object has the "Server" tag
         if (!gameObject.CompareTag("Server"))
@@ -166,27 +147,15 @@ public class ServerConnection : MonoBehaviour
     
     void OnCablePluggedIn()
     {
-        // Network integration - wysyłamy info do serwera
-        if (useNetworking)
-        {
-            if (networkCableInteraction != null)
-            {
-                networkCableInteraction.OnCableConnected();
-                Debug.Log($"[ServerConnection] Kabel podłączony - wysłano do sieci");
-            }
-            else
-            {
-                Debug.LogWarning("[ServerConnection] Brak NetworkCableInteraction! Dodaj ten komponent do tego serwera.");
-            }
-        }
-        else
-        {
-            // Tryb lokalny (bez sieci) - bezpośrednio zmień tile'e
-            TileManager tileManager = FindFirstObjectByType<TileManager>();
-            tileManager?.SetupDangers(dangerType);
-            tileManager?.SetupLights(tileLightCircuit);
-            Debug.Log($"[ServerConnection] Kabel podłączony (tryb lokalny)");
-        }
+        TileManager tileManager = FindFirstObjectByType<TileManager>();
+        tileManager?.SetupDangers(dangerType);
+        tileManager?.SetupLights(tileLightCircuit);
+        // Add your game logic here
+        // Examples:
+        // - Enable power to something
+        // - Unlock a door
+        // - Start a puzzle sequence
+        // - etc.
     }
     
     void DisconnectCableFromServer()
@@ -222,12 +191,6 @@ public class ServerConnection : MonoBehaviour
         if (connectedIndicator != null)
         {
             connectedIndicator.SetActive(false);
-        }
-        
-        // Network integration
-        if (useNetworking && networkCableInteraction != null)
-        {
-            networkCableInteraction.OnCableDisconnected();
         }
         
         Debug.Log("Cable disconnected from server");

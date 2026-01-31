@@ -374,6 +374,8 @@ GameObject:
   - component: {fileID: 947464683495422532}
   - component: {fileID: 337845769041309002}
   - component: {fileID: 6996397229685464715}
+  - component: {fileID: 1617061956835823529}
+  - component: {fileID: 2606424883351704839}
   m_Layer: 0
   m_Name: CableEnjoyer
   m_TagString: Player
@@ -434,6 +436,48 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3, y: 7, z: 3}
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &1617061956835823529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5249651102347479665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 2822866147
+  InScenePlacedSourceGlobalObjectIdHash: 3581548813
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!114 &2606424883351704839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5249651102347479665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d618483f9da764342aa445633d487546, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkPlayerController
+  ShowTopMostFoldoutHeaderGroup: 1
+  movementSpine: {fileID: 337845769041309002}
+  gridMovement: {fileID: 0}
+  operatorCameraTag: OperatorCamera
+  CameraTag: RunnerCamera
 --- !u!1 &6057783960945466444
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,3 @@
-using Spine.Unity.Editor;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
@@ -6,9 +5,11 @@ public class Danger : MonoBehaviour
 {
     [SerializeField] private DangerType dangerType;
     [SerializeField] private Tile.LightCircuit lightCircuit;
+    [SerializeField] private DangerList dangerList;
+    [SerializeField] private GameObject chosenDangerObject;
     [Space]
-    [SerializeField] private Collider dangerCollider;
-    [SerializeField] private MeshRenderer dangerMeshRenderer;
+    private Collider dangerCollider;
+    private MeshRenderer dangerMeshRenderer;
 
     public DangerType Type => dangerType;
     public Tile.LightCircuit LightCircuit => lightCircuit;
@@ -20,6 +21,8 @@ public class Danger : MonoBehaviour
         dangerCollider = GetComponent<Collider>();
         dangerMeshRenderer = GetComponent<MeshRenderer>();
         playerCollider = FindFirstObjectByType<MovementSpine>()?.GetComponent<Collider>();
+        chosenDangerObject = dangerList.InstantiateRandomDanger(transform);
+        dangerMeshRenderer = chosenDangerObject.GetComponent<MeshRenderer>();
     }
 
     void FixedUpdate()
@@ -44,7 +47,8 @@ public class Danger : MonoBehaviour
     {
         Fire,
         Water,
-        Electric
+        Electric,
+        Toxic   
     }
 
     void OnDrawGizmos()

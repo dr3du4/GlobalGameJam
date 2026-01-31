@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Simple UI for hosting/joining a multiplayer session.
@@ -213,20 +214,23 @@ public class NetworkConnectionUI : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        if (Keyboard.current == null) return;
+        if (NetworkManager.Singleton == null) return;
+
         if (!NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsHost)
         {
-            if (Input.GetKeyDown(KeyCode.H))
+            if (Keyboard.current.hKey.wasPressedThisFrame)
             {
                 OnHostClicked();
             }
-            else if (Input.GetKeyDown(KeyCode.J))
+            else if (Keyboard.current.jKey.wasPressedThisFrame)
             {
                 OnClientClicked();
             }
         }
 
         // Debug disconnect
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             if (NetworkManager.Singleton.IsClient || NetworkManager.Singleton.IsHost)
             {

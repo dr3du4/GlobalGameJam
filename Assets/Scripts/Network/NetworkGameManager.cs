@@ -142,6 +142,8 @@ public class NetworkGameManager : NetworkBehaviour
         Debug.Log($"[NetworkGameManager] Przydzielono {role} graczowi {clientId}");
 
         NotifyRoleClientRpc(clientId, role);
+        
+        // Spawn gracza w odpowiednim miejscu
         SpawnPlayerForRole(clientId, role);
     }
 
@@ -152,20 +154,43 @@ public class NetworkGameManager : NetworkBehaviour
         Transform spawnPoint = role == PlayerRole.Runner ? runnerSpawnPoint : operatorSpawnPoint;
         GameObject prefab = role == PlayerRole.Runner ? runnerPrefab : operatorPrefab;
 
-        if (prefab != null && spawnPoint != null)
+        // Debug info
+        Debug.Log($"[NetworkGameManager] SpawnPlayerForRole: clientId={clientId}, role={role}");
+        Debug.Log($"[NetworkGameManager] SpawnPoint: {(spawnPoint != null ? spawnPoint.position.ToString() : "NULL")}");
+        Debug.Log($"[NetworkGameManager] Prefab: {(prefab != null ? prefab.name : "NULL")}");
+
+        if (prefab == null)
         {
-            GameObject playerObj = Instantiate(prefab, spawnPoint.position, spawnPoint.rotation);
-            NetworkObject netObj = playerObj.GetComponent<NetworkObject>();
-            
-            if (netObj != null)
-            {
-                netObj.SpawnAsPlayerObject(clientId);
-                Debug.Log($"[NetworkGameManager] Zespawnowano {role} dla gracza {clientId}");
-            }
+            Debug.LogError($"[NetworkGameManager] Brak prefaba dla {role}! Przypisz prefab w inspektorze.");
+            return;
+        }
+
+        if (spawnPoint == null)
+        {
+            Debug.LogError($"[NetworkGameManager] Brak spawn pointu dla {role}! Przypisz spawn point w inspektorze.");
+            return;
+        }
+
+        // Stwórz gracza w spawn poincie
+        Vector3 spawnPosition = spawnPoint.position;
+        Quaternion spawnRotation = spawnPoint.rotation;
+
+        Debug.Log($"[NetworkGameManager] Spawning at: {spawnPosition}");
+
+        GameObject playerObj = Instantiate(prefab, spawnPosition, spawnRotation);
+        playerObj.name = $"{role}Player_{clientId}";
+
+        NetworkObject netObj = playerObj.GetComponent<NetworkObject>();
+        
+        if (netObj != null)
+        {
+            netObj.SpawnAsPlayerObject(clientId);
+            Debug.Log($"[NetworkGameManager] ✅ Zespawnowano {role} dla gracza {clientId} na pozycji {spawnPosition}");
         }
         else
         {
-            Debug.LogWarning($"[NetworkGameManager] Brak prefaba lub spawn pointu dla {role}");
+            Debug.LogError($"[NetworkGameManager] ❌ Prefab {prefab.name} nie ma komponentu NetworkObject!");
+            Destroy(playerObj);
         }
     }
 

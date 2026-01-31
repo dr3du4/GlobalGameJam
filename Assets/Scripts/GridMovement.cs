@@ -17,12 +17,34 @@ public class GridMovement : AbstractPlayer
         targetPosition = transform.position;
     }
 
+    private int debugCounter = 0;
+    
     override protected void MyUpdate()
     {
+        debugCounter++;
+        
+        // Sprawdź czy to lokalny gracz
+        if (!InputHelper.CanPlayerMove(gameObject))
+        {
+            if (debugCounter % 120 == 0) Debug.LogWarning($"[GridMovement] CanPlayerMove = false dla {gameObject.name}");
+            return;
+        }
+
+        // Pobierz input actions
+        var inputActions = InputHelper.GetInputActionsForPlayer(gameObject);
+        if (inputActions == null)
+        {
+            if (debugCounter % 120 == 0) Debug.LogWarning($"[GridMovement] Brak Input Actions dla {gameObject.name}!");
+            return;
+        }
+
         if (!isMoving)
         {
             SetWalking(false);
-            Vector2 input = GameManager.instance.inputActions.Player.Move.ReadValue<Vector2>();
+            Vector2 input = inputActions.Player.Move.ReadValue<Vector2>();
+            
+            // Debug input tylko gdy się naciska
+            // if (input.magnitude > 0.1f) Debug.Log($"[GridMovement] Input: {input}");
             
             // Only move in one direction at a time (X-Z plane)
             Vector3 moveDirection = Vector3.zero;
@@ -41,12 +63,29 @@ public class GridMovement : AbstractPlayer
                 float minZ = gridOrigin.y;
                 float maxZ = gridOrigin.y + (gridHeight - 1) * gridSize;
                 
+                // Debug bounds (tylko raz na 5 sekund)
+                if (debugCounter % 300 == 0)
+                {
+                    Debug.Log($"[GridMovement] Pozycja: {transform.position}, Bounds: X[{minX},{maxX}] Z[{minZ},{maxZ}]");
+                }
+                
                 // Check if new position is within bounds
-                if (newPosition.x >= minX && newPosition.x <= maxX &&
-                    newPosition.z >= minZ && newPosition.z <= maxZ)
+                // Na razie WYŁĄCZONE - pozwól się poruszać wszędzie
+                // TODO: Napraw bounds dla multiplayer
+                bool withinBounds = true; // Tymczasowo zawsze true
+                /*
+                bool withinBounds = newPosition.x >= minX && newPosition.x <= maxX &&
+                                   newPosition.z >= minZ && newPosition.z <= maxZ;
+                */
+                
+                if (withinBounds)
                 {
                     targetPosition = newPosition;
                     isMoving = true;
+                }
+                else
+                {
+                    if (debugCounter % 60 == 0) Debug.LogWarning($"[GridMovement] Poza bounds! Nie mogę się ruszyć.");
                 }
             }
         }
@@ -54,7 +93,6 @@ public class GridMovement : AbstractPlayer
         {
             SetWalking(true);
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
-            Debug.Log($"{transform.position}");
             
             if (Vector3.Distance(transform.position, targetPosition) < 0.01f)
             {

@@ -18,10 +18,16 @@ public class GameManager : MonoBehaviour
         instance = this;
         inputActions = new InputSystem_Actions();
         inputActions.Player.Enable();
+        
+        // ZAKOMENTOWANE DLA MULTIPLAYER - przełączanie graczy na spację tylko w singleplayer
+        // Odkomentuj jeśli wracasz do singleplayer
+        /*
         inputActions.Player.Jump.performed += OnSpacePressed;
         SwitchToCableEnjoyer();
+        */
     }
 
+    /* ZAKOMENTOWANE DLA MULTIPLAYER - odkomentuj dla singleplayer
     void OnSpacePressed(InputAction.CallbackContext context)
     {
         SwitchPlayer();
@@ -60,4 +66,5 @@ public class GameManager : MonoBehaviour
         if (FindFirstObjectByType<GridMovement>() is GridMovement gridMovement) gridMovement.enabled = true;
         if (FindFirstObjectByType<MovementSpine>() is MovementSpine movementSpine) movementSpine.enabled = false;
     }
+    */
 }
