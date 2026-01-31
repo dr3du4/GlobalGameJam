@@ -15,7 +15,6 @@ public class ServerConnection : MonoBehaviour
     
     [Header("Network Integration")]
     [SerializeField] private NetworkCableInteraction networkCableInteraction;
-    [SerializeField] private int interactionId = 0; // Used if no NetworkCableInteraction component
     
     private Transform player;
     private CableHolder nearbyCable = null;
@@ -141,26 +140,27 @@ public class ServerConnection : MonoBehaviour
     
     void OnCablePluggedIn()
     {
-        // Local game logic (non-networked)
-        TileManager tileManager = FindFirstObjectByType<TileManager>();
-        tileManager?.SetupDangers(dangerType);
-        tileManager?.SetupLights(tileLightCircuit);
-        
-        // Network integration - notify the network system
+        // Network integration - wysyłamy info do serwera
         if (useNetworking)
         {
             if (networkCableInteraction != null)
             {
                 networkCableInteraction.OnCableConnected();
+                Debug.Log($"[ServerConnection] Kabel podłączony - wysłano do sieci");
             }
-            else if (NetworkGameManager.Instance != null)
+            else
             {
-                // Fallback: send interaction directly
-                NetworkGameManager.Instance.RequestInteractionServerRpc(interactionId);
+                Debug.LogWarning("[ServerConnection] Brak NetworkCableInteraction! Dodaj ten komponent do tego serwera.");
             }
         }
-        
-        Debug.Log($"[ServerConnection] Cable plugged in, interaction ID: {interactionId}");
+        else
+        {
+            // Tryb lokalny (bez sieci) - bezpośrednio zmień tile'e
+            TileManager tileManager = FindFirstObjectByType<TileManager>();
+            tileManager?.SetupDangers(dangerType);
+            tileManager?.SetupLights(tileLightCircuit);
+            Debug.Log($"[ServerConnection] Kabel podłączony (tryb lokalny)");
+        }
     }
     
     public void DisconnectCable()
