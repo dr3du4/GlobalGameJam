@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Unity.Netcode;
 
 public class ServerConnection : MonoBehaviour
 {
@@ -12,14 +13,33 @@ public class ServerConnection : MonoBehaviour
     [SerializeField] private Tile.LightCircuit tileLightCircuit;
     [SerializeField] private Danger.DangerType dangerType;
     
+    [Header("Network Integration")]
+    [SerializeField] private NetworkCableInteraction networkCableInteraction;
+    [SerializeField] private int interactionId = 0; // Used if no NetworkCableInteraction component
+    
     private Transform player;
     private CableHolder nearbyCable = null;
     private bool isPlayerNearby = false;
+    private bool useNetworking = false;
     
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
-        GameManager.instance.inputActions.Player.Interact.performed += OnInteractPressed;
+        
+        // Check if we're in networked mode
+        useNetworking = NetworkManager.Singleton != null && NetworkManager.Singleton.IsClient;
+        
+        // Only subscribe to input if GameManager exists (non-networked mode)
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.inputActions.Player.Interact.performed += OnInteractPressed;
+        }
+        
+        // Auto-find NetworkCableInteraction if not assigned
+        if (networkCableInteraction == null)
+        {
+            networkCableInteraction = GetComponent<NetworkCableInteraction>();
+        }
         
         // Make sure this object has the "Server" tag
         if (!gameObject.CompareTag("Server"))
@@ -121,15 +141,26 @@ public class ServerConnection : MonoBehaviour
     
     void OnCablePluggedIn()
     {
+        // Local game logic (non-networked)
         TileManager tileManager = FindFirstObjectByType<TileManager>();
         tileManager?.SetupDangers(dangerType);
         tileManager?.SetupLights(tileLightCircuit);
-        // Add your game logic here
-        // Examples:
-        // - Enable power to something
-        // - Unlock a door
-        // - Start a puzzle sequence
-        // - etc.
+        
+        // Network integration - notify the network system
+        if (useNetworking)
+        {
+            if (networkCableInteraction != null)
+            {
+                networkCableInteraction.OnCableConnected();
+            }
+            else if (NetworkGameManager.Instance != null)
+            {
+                // Fallback: send interaction directly
+                NetworkGameManager.Instance.RequestInteractionServerRpc(interactionId);
+            }
+        }
+        
+        Debug.Log($"[ServerConnection] Cable plugged in, interaction ID: {interactionId}");
     }
     
     public void DisconnectCable()
@@ -145,6 +176,12 @@ public class ServerConnection : MonoBehaviour
         if (connectedIndicator != null)
         {
             connectedIndicator.SetActive(false);
+        }
+        
+        // Network integration
+        if (useNetworking && networkCableInteraction != null)
+        {
+            networkCableInteraction.OnCableDisconnected();
         }
         
         Debug.Log("Cable disconnected from server");
