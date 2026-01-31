@@ -21,9 +21,13 @@ public class Danger : MonoBehaviour
     {
         dangerCollider = GetComponent<Collider>();
         dangerMeshRenderer = GetComponent<MeshRenderer>();
-        playerCollider = FindFirstObjectByType<MovementSpine>()?.GetComponent<Collider>();
         chosenDangerObject = dangerList.InstantiateRandomDanger(transform);
         dangerMeshRenderer = chosenDangerObject.GetComponent<MeshRenderer>();
+    }
+
+    void Start()
+    {
+        playerCollider = FindFirstObjectByType<GridMovement>()?.GetComponent<Collider>();
     }
 
     void FixedUpdate()
@@ -65,7 +69,9 @@ public class Danger : MonoBehaviour
         gizmoColor.a = 0.5f;
 
         Gizmos.color = gizmoColor;
-        Gizmos.DrawCube(transform.position + new Vector3(-0.21f, 0.5f, 0f), new Vector3(0.4f, 0.01f, 0.8f));
+        Vector3 pos = transform.position + new Vector3(-0.21f, 0.5f, 0f);
+        pos.y = 0.1f;
+        Gizmos.DrawCube(pos, new Vector3(0.4f, 0.01f, 0.8f));
 
         gizmoColor = dangerType switch
         {
@@ -77,6 +83,7 @@ public class Danger : MonoBehaviour
         gizmoColor.a = 0.9f;
 
         Gizmos.color = gizmoColor;
-        Gizmos.DrawCube(transform.position + new Vector3(-0.21f, 0.6f, 0f), new Vector3(0.2f, 0.01f, 0.6f));
+        pos.y = 0.1f;
+        Gizmos.DrawCube(pos, new Vector3(0.2f, 0.01f, 0.6f));
     }
 }

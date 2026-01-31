@@ -164,6 +164,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Serwer (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 4870720130711453047, guid: 2cefe0a2aa5399ce3a3e990eb05523c3, type: 3}
+      propertyPath: m_TagString
+      value: Server
+      objectReference: {fileID: 0}
     - target: {fileID: 5247703516941002701, guid: 2cefe0a2aa5399ce3a3e990eb05523c3, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.8
@@ -288,6 +292,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Serwer (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 4870720130711453047, guid: 2cefe0a2aa5399ce3a3e990eb05523c3, type: 3}
+      propertyPath: m_TagString
+      value: Server
+      objectReference: {fileID: 0}
     - target: {fileID: 5247703516941002701, guid: 2cefe0a2aa5399ce3a3e990eb05523c3, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.8
@@ -353,6 +361,10 @@ PrefabInstance:
     - target: {fileID: 4870720130711453047, guid: 2cefe0a2aa5399ce3a3e990eb05523c3, type: 3}
       propertyPath: m_Name
       value: Serwer
+      objectReference: {fileID: 0}
+    - target: {fileID: 4870720130711453047, guid: 2cefe0a2aa5399ce3a3e990eb05523c3, type: 3}
+      propertyPath: m_TagString
+      value: Server
       objectReference: {fileID: 0}
     - target: {fileID: 5247703516941002701, guid: 2cefe0a2aa5399ce3a3e990eb05523c3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -539,6 +551,10 @@ PrefabInstance:
     - target: {fileID: 4870720130711453047, guid: 2cefe0a2aa5399ce3a3e990eb05523c3, type: 3}
       propertyPath: m_Name
       value: Serwer (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4870720130711453047, guid: 2cefe0a2aa5399ce3a3e990eb05523c3, type: 3}
+      propertyPath: m_TagString
+      value: Server
       objectReference: {fileID: 0}
     - target: {fileID: 5247703516941002701, guid: 2cefe0a2aa5399ce3a3e990eb05523c3, type: 3}
       propertyPath: m_LocalPosition.x
