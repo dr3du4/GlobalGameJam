@@ -35,7 +35,7 @@ public class MovementSpine : MonoBehaviour
     {
         Vector2 moveInput = Vector2.zero;
 
-        if(GameManger.instance.useFirstMap)
+        if(GameManager.instance.useFirstMap)
         {
             if (Keyboard.current != null)
             {
