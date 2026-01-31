@@ -9,74 +9,45 @@ public class MovementSpine : MonoBehaviour
     public float speed = 5f;
     
     [Header("Spine Animations - Directional")]
-    public SkeletonAnimation frontAnimation;  // PRZÓD - moving down
-    public SkeletonAnimation backAnimation;   // TYŁ - moving up
-    public SkeletonAnimation sideAnimation;   // BOK - moving left/right
+
+    [SerializeField] private Transform textureHolder;
+    [SerializeField] private Animator frontAnimator;
+    [SerializeField] private Animator backAnimator;
+    [SerializeField] private Animator sideAnimator;
+
+    private string actionName = "action";
+    private string hitName = "hit";
     
-    [Header("Animation Names")]
-    public string idleAnimationName = "idle";
-    public string walkAnimationName = "walk";
-    
-    private SkeletonAnimation currentAnimation;
-    private bool isMoving = false;
-    private Vector2 lastMoveDirection = Vector2.down; // Start facing front
+    private Animator currentAnimator;
 
     void Start()
     {
-        // Start with front animation
-        SetActiveAnimation(frontAnimation);
-        if (currentAnimation != null)
-        {
-            PlayAnimation(idleAnimationName, true);
-        }
+        SetActiveAnimation(frontAnimator);
     }
 
     void Update()
     {
-        Vector2 moveInput = Vector2.zero;
+        Vector3 directionToCamera = Camera.main.transform.position - textureHolder.position;
+        directionToCamera.y = 0;
+        textureHolder.rotation = Quaternion.LookRotation(directionToCamera);
 
-        if(GameManager.instance.useFirstMap)
+        Vector2 moveInput = GameManager.instance.inputActions.Player.Move.ReadValue<Vector2>();
+
+        if (GameManager.instance.isCableEnjoyerChosen)
         {
-            if (Keyboard.current != null)
-            {
-                if (Keyboard.current.aKey.isPressed) moveInput.x -= 1;
-                if (Keyboard.current.dKey.isPressed) moveInput.x += 1;
-                if (Keyboard.current.sKey.isPressed) moveInput.y -= 1;
-                if (Keyboard.current.wKey.isPressed) moveInput.y += 1;
-            }
-        
-            // Move the player
-            if (moveInput != Vector2.zero)
-            {
-                transform.Translate(new Vector3(moveInput.x, 0, moveInput.y) * speed * Time.deltaTime);
-                
-                // Update last move direction
-                lastMoveDirection = moveInput.normalized;
-                
-                // Switch animation based on movement direction
-                UpdateAnimationDirection(moveInput);
-                
-                // Play walk animation
-                if (!isMoving)
-                {
-                    PlayAnimation(walkAnimationName, true);
-                    isMoving = true;
-                }
-            }
-            else
-            {
-                // Play idle animation
-                if (isMoving)
-                {
-                    PlayAnimation(idleAnimationName, true);
-                    isMoving = false;
-                }
-            }
+            frontAnimator.SetBool("walk", moveInput.magnitude > 0);
+            transform.Translate(new Vector3(moveInput.x, 0, moveInput.y) * speed * Time.deltaTime);
+            UpdateAnimationDirection(moveInput);
         }
     }
     
     void UpdateAnimationDirection(Vector2 moveInput)
     {
+        // if (moveInput.magnitude < 0.1f || moveInput.y < -0.9f)
+        // {
+        //     SetActiveAnimation(frontAnimator);
+        // }
+        // else if ()
         // Determine which direction is dominant
         if (Mathf.Abs(moveInput.y) > Mathf.Abs(moveInput.x))
         {
@@ -84,71 +55,45 @@ public class MovementSpine : MonoBehaviour
             if (moveInput.y > 0)
             {
                 // Moving up - show back
-                SetActiveAnimation(backAnimation);
+                SetActiveAnimation(backAnimator);
             }
             else
             {
                 // Moving down - show front
-                SetActiveAnimation(frontAnimation);
+                SetActiveAnimation(frontAnimator);
             }
         }
         else
         {
-            // Horizontal movement is dominant - show side
-            SetActiveAnimation(sideAnimation);
+            SetActiveAnimation(sideAnimator);
+            sideAnimator.transform.localScale = new Vector3(moveInput.x > 0 ? -1 : 1, 1, 1);
+        }
+    }
+    
+    void SetActiveAnimation(Animator animator)
+    {
+        var animState = frontAnimator.GetAnimatorTransitionInfo(0);
+        if (animState.IsName(hitName) || animState.IsName(actionName))
+        {
+            frontAnimator.gameObject.SetActive(false);
+            backAnimator.gameObject.SetActive(false);
+            sideAnimator.gameObject.SetActive(false);
             
-            // Flip for left/right
-            if (sideAnimation != null && sideAnimation.Skeleton != null)
-            {
-                sideAnimation.Skeleton.ScaleX = moveInput.x > 0 ? 1 : -1;
-            }
+            currentAnimator = frontAnimator;
+            currentAnimator.gameObject.SetActive(true);
         }
-    }
-    
-    void SetActiveAnimation(SkeletonAnimation newAnimation)
-    {
-        if (newAnimation == null || newAnimation == currentAnimation) return;
+        // if (animator == currentAnimator || 
+        frontAnimator.gameObject.SetActive(false);
+        backAnimator.gameObject.SetActive(false);
+        sideAnimator.gameObject.SetActive(false);
         
-        // Disable all animations
-        if (frontAnimation != null) frontAnimation.gameObject.SetActive(false);
-        if (backAnimation != null) backAnimation.gameObject.SetActive(false);
-        if (sideAnimation != null) sideAnimation.gameObject.SetActive(false);
-        
-        // Enable the new animation
-        currentAnimation = newAnimation;
-        currentAnimation.gameObject.SetActive(true);
-    }
-    
-    public void PlayAnimation(string animationName, bool loop = true, int trackIndex = 0)
-    {
-        if (currentAnimation == null || currentAnimation.AnimationState == null) return;
-        
-        TrackEntry trackEntry = currentAnimation.AnimationState.SetAnimation(trackIndex, animationName, loop);
-        if (trackEntry == null)
-        {
-            Debug.LogWarning($"Animation '{animationName}' not found!");
-        }
-    }
-    
-    public void ChangeSkin(string skinName)
-    {
-        if (currentAnimation == null || currentAnimation.Skeleton == null) return;
-        
-        Skin newSkin = currentAnimation.Skeleton.Data.FindSkin(skinName);
-        if (newSkin != null)
-        {
-            currentAnimation.Skeleton.SetSkin(newSkin);
-            currentAnimation.Skeleton.SetSlotsToSetupPose();
-            currentAnimation.Update(0);
-        }
-        else
-        {
-            Debug.LogWarning($"Skin '{skinName}' not found!");
-        }
+        currentAnimator = animator;
+        currentAnimator.gameObject.SetActive(true);
     }
 
     public void HandleDangerCollision(Danger danger)
     {
+        SetActiveAnimation(frontAnimator);
         Debug.Log($"Collided with danger of type: {danger.Type} on circuit: {danger.LightCircuit}");
     }
 }

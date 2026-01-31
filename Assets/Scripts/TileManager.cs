@@ -51,4 +51,18 @@ public class TileManager : MonoBehaviour
             }
         }
     }
+
+    public void ClearAll()
+    {
+        foreach (var danger in dangers)
+        {
+            danger.SetDangerActive(false);
+            danger.SetDangerVisible(false);
+        }
+
+        foreach (var tile in tiles)
+        {
+            tile.SetTileVisible(false);
+        }
+    }
 }

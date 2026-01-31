@@ -9,6 +9,8 @@ public class ServerConnection : MonoBehaviour
     
     [Header("Visual Feedback")]
     public GameObject connectedIndicator; // Optional: object to show when connected
+    [SerializeField] private Tile.LightCircuit tileLightCircuit;
+    [SerializeField] private Danger.DangerType dangerType;
     
     private Transform player;
     private CableHolder nearbyCable = null;
@@ -17,6 +19,7 @@ public class ServerConnection : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        GameManager.instance.inputActions.Player.Interact.performed += OnInteractPressed;
         
         // Make sure this object has the "Server" tag
         if (!gameObject.CompareTag("Server"))
@@ -53,11 +56,28 @@ public class ServerConnection : MonoBehaviour
             }
         }
     }
+
+    private void OnInteractPressed(InputAction.CallbackContext context)
+    {
+        if (isPlayerNearby)
+        {
+            FindNearbyCable();
+            
+            // Try to connect cable
+            if (nearbyCable != null)
+            {
+                if (nearbyCable.IsCableHeld() && !nearbyCable.IsCableConnected())
+                {
+                    ConnectCable();
+                }
+            }
+        }
+    }
     
     void FindNearbyCable()
     {
         // Find all CableHolders in the scene
-        CableHolder[] cables = FindObjectsOfType<CableHolder>();
+        CableHolder[] cables = FindObjectsByType<CableHolder>(FindObjectsSortMode.None);
         
         nearbyCable = null;
         foreach (CableHolder cable in cables)
@@ -101,6 +121,9 @@ public class ServerConnection : MonoBehaviour
     
     void OnCablePluggedIn()
     {
+        TileManager tileManager = FindFirstObjectByType<TileManager>();
+        tileManager?.SetupDangers(dangerType);
+        tileManager?.SetupLights(tileLightCircuit);
         // Add your game logic here
         // Examples:
         // - Enable power to something
@@ -125,6 +148,7 @@ public class ServerConnection : MonoBehaviour
         }
         
         Debug.Log("Cable disconnected from server");
+        FindFirstObjectByType<TileManager>()?.ClearAll();
     }
     
     // Visual feedback in editor
