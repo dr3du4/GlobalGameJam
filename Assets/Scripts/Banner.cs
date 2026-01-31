@@ -7,7 +7,7 @@ public class Banner : MonoBehaviour
     {
         Vector3 pos = isGridWalkerBanner ? GameManager.instance.secondCamera.transform.position : GameManager.instance.mainCamera.transform.position;
         Vector3 directionToCamera = pos - transform.position;
-        directionToCamera.y = 0;
+        // directionToCamera.y = 0;
         transform.rotation = Quaternion.LookRotation(directionToCamera);
     }
 }

@@ -16,3 +16,4 @@ MonoBehaviour:
   - {fileID: 919132149155446097, guid: 0f9caf7afbada5f47b0fa0ef18465357, type: 3}
   - {fileID: 919132149155446097, guid: e9691f40d9b37ed9e99e7c43b62980ae, type: 3}
   - {fileID: 919132149155446097, guid: 2dca5c264c84a56c886ceddc21e8be36, type: 3}
+  anim2DObj: {fileID: 8274017343606443810, guid: b4ded70b5b1112dfeac81460669caa93, type: 3}
