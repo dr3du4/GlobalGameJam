@@ -5,6 +5,7 @@ public class ServerConnection : MonoBehaviour
 {
     [Header("Connection Settings")]
     public float connectionRange = 2f;
+    public CableColor serverColor = CableColor.Yellow;
     public bool isCableConnected = false;
     
     [Header("Visual Feedback")]
@@ -35,14 +36,14 @@ public class ServerConnection : MonoBehaviour
     
     void Update()
     {
-        if (player == null || isCableConnected) return;
+        if (player == null) return;
         
         // Check distance to player
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         isPlayerNearby = distanceToPlayer <= connectionRange;
         
-        // Check if player is holding a cable
-        if (isPlayerNearby)
+        // Check if player is holding a cable (when not connected)
+        if (isPlayerNearby && !isCableConnected)
         {
             FindNearbyCable();
             
@@ -51,8 +52,25 @@ public class ServerConnection : MonoBehaviour
             {
                 if (nearbyCable.IsCableHeld() && !nearbyCable.IsCableConnected())
                 {
-                    ConnectCable();
+                    // Check color compatibility before connecting
+                    if (nearbyCable.GetCableColor() == serverColor)
+                    {
+                        ConnectCable();
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Color mismatch! Cable is {nearbyCable.GetCableColor()}, server requires {serverColor}");
+                    }
                 }
+            }
+        }
+        
+        // Disconnect cable with F key when connected
+        if (isPlayerNearby && isCableConnected)
+        {
+            if (Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame)
+            {
+                DisconnectCableFromServer();
             }
         }
     }
@@ -68,7 +86,15 @@ public class ServerConnection : MonoBehaviour
             {
                 if (nearbyCable.IsCableHeld() && !nearbyCable.IsCableConnected())
                 {
-                    ConnectCable();
+                    // Check color compatibility before connecting
+                    if (nearbyCable.GetCableColor() == serverColor)
+                    {
+                        ConnectCable();
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Color mismatch! Cable is {nearbyCable.GetCableColor()}, server requires {serverColor}");
+                    }
                 }
             }
         }
@@ -132,8 +158,28 @@ public class ServerConnection : MonoBehaviour
         // - etc.
     }
     
+    void DisconnectCableFromServer()
+    {
+        // Player presses F at server - takes cable from server
+        if (nearbyCable != null)
+        {
+            nearbyCable.DisconnectFromServer();
+        }
+        
+        isCableConnected = false;
+        
+        if (connectedIndicator != null)
+        {
+            connectedIndicator.SetActive(false);
+        }
+        
+        Debug.Log("Cable disconnected from server. Take it back to holder.");
+        FindFirstObjectByType<TileManager>()?.ClearAll();
+    }
+    
     public void DisconnectCable()
     {
+        // Complete disconnect (used when resetting)
         if (nearbyCable != null)
         {
             nearbyCable.DisconnectCable();
@@ -154,7 +200,32 @@ public class ServerConnection : MonoBehaviour
     // Visual feedback in editor
     void OnDrawGizmos()
     {
-        Gizmos.color = isCableConnected ? Color.green : (isPlayerNearby ? Color.cyan : Color.blue);
+        // Draw gizmo with server color
+        Color gizmoColor = Color.white;
+        switch (serverColor)
+        {
+            case CableColor.Yellow:
+                gizmoColor = Color.yellow;
+                break;
+            case CableColor.Red:
+                gizmoColor = Color.red;
+                break;
+            case CableColor.Green:
+                gizmoColor = Color.green;
+                break;
+            case CableColor.Blue:
+                gizmoColor = Color.blue;
+                break;
+        }
+        
+        // Brighter when connected, medium when player nearby, darker when far
+        if (isCableConnected)
+            Gizmos.color = gizmoColor;
+        else if (isPlayerNearby)
+            Gizmos.color = gizmoColor * 0.8f;
+        else
+            Gizmos.color = gizmoColor * 0.5f;
+            
         Gizmos.DrawWireSphere(transform.position, connectionRange);
     }
 }
