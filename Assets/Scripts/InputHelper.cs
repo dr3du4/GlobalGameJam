@@ -20,10 +20,6 @@ public static class InputHelper
             {
                 return actions;
             }
-            else
-            {
-                Debug.LogWarning($"[InputHelper] NetworkPlayerController istnieje ale brak Input Actions!");
-            }
         }
 
         // Tryb single-player - użyj GameManager
@@ -32,7 +28,6 @@ public static class InputHelper
             return GameManager.instance.inputActions;
         }
 
-        Debug.LogWarning($"[InputHelper] Nie znaleziono Input Actions dla {player.name}!");
         return null;
     }
 
@@ -52,5 +47,3 @@ public static class InputHelper
         return true;
     }
 }
-
-

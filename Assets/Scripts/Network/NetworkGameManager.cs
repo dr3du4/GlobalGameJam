@@ -92,7 +92,6 @@ public class NetworkGameManager : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        Debug.Log($"[NetworkGameManager] Gracz {clientId} dołączył");
         AssignRole(clientId);
 
         // Start gdy obaj gracze połączeni
@@ -106,8 +105,6 @@ public class NetworkGameManager : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        Debug.Log($"[NetworkGameManager] Gracz {clientId} rozłączył się");
-        
         if (playerRoles.ContainsKey(clientId))
         {
             playerRoles.Remove(clientId);
@@ -139,11 +136,8 @@ public class NetworkGameManager : NetworkBehaviour
         }
 
         playerRoles[clientId] = role;
-        Debug.Log($"[NetworkGameManager] Przydzielono {role} graczowi {clientId}");
 
         NotifyRoleClientRpc(clientId, role);
-        
-        // Spawn gracza w odpowiednim miejscu
         SpawnPlayerForRole(clientId, role);
     }
 
@@ -154,28 +148,20 @@ public class NetworkGameManager : NetworkBehaviour
         Transform spawnPoint = role == PlayerRole.Runner ? runnerSpawnPoint : operatorSpawnPoint;
         GameObject prefab = role == PlayerRole.Runner ? runnerPrefab : operatorPrefab;
 
-        // Debug info
-        Debug.Log($"[NetworkGameManager] SpawnPlayerForRole: clientId={clientId}, role={role}");
-        Debug.Log($"[NetworkGameManager] SpawnPoint: {(spawnPoint != null ? spawnPoint.position.ToString() : "NULL")}");
-        Debug.Log($"[NetworkGameManager] Prefab: {(prefab != null ? prefab.name : "NULL")}");
-
         if (prefab == null)
         {
-            Debug.LogError($"[NetworkGameManager] Brak prefaba dla {role}! Przypisz prefab w inspektorze.");
+            Debug.LogError($"[NetworkGameManager] Brak prefaba dla {role}!");
             return;
         }
 
         if (spawnPoint == null)
         {
-            Debug.LogError($"[NetworkGameManager] Brak spawn pointu dla {role}! Przypisz spawn point w inspektorze.");
+            Debug.LogError($"[NetworkGameManager] Brak spawn pointu dla {role}!");
             return;
         }
 
-        // Stwórz gracza w spawn poincie
         Vector3 spawnPosition = spawnPoint.position;
         Quaternion spawnRotation = spawnPoint.rotation;
-
-        Debug.Log($"[NetworkGameManager] Spawning at: {spawnPosition}");
 
         GameObject playerObj = Instantiate(prefab, spawnPosition, spawnRotation);
         playerObj.name = $"{role}Player_{clientId}";
@@ -185,11 +171,10 @@ public class NetworkGameManager : NetworkBehaviour
         if (netObj != null)
         {
             netObj.SpawnAsPlayerObject(clientId);
-            Debug.Log($"[NetworkGameManager] ✅ Zespawnowano {role} dla gracza {clientId} na pozycji {spawnPosition}");
         }
         else
         {
-            Debug.LogError($"[NetworkGameManager] ❌ Prefab {prefab.name} nie ma komponentu NetworkObject!");
+            Debug.LogError($"[NetworkGameManager] Prefab {prefab.name} nie ma komponentu NetworkObject!");
             Destroy(playerObj);
         }
     }
@@ -199,16 +184,13 @@ public class NetworkGameManager : NetworkBehaviour
     {
         if (NetworkManager.Singleton.LocalClientId == targetClientId)
         {
-            string roleName = role == PlayerRole.Runner ? "RUNNER (chodzisz po mapie)" : "OPERATOR (łączysz kable)";
-            Debug.Log($"[NetworkGameManager] Jesteś {roleName}!");
             OnRoleAssigned(role);
         }
     }
 
     private void OnRoleAssigned(PlayerRole role)
     {
-        // Włącz odpowiednią kamerę
-        // To można rozszerzyć w przyszłości
+        // Można rozszerzyć w przyszłości
     }
 
     #endregion
@@ -222,7 +204,6 @@ public class NetworkGameManager : NetworkBehaviour
         serverStartTime.Value = Time.time;
         isGameActive.Value = true;
         
-        Debug.Log("[NetworkGameManager] GRA ROZPOCZĘTA!");
         StartGameClientRpc();
     }
 
@@ -258,7 +239,6 @@ public class NetworkGameManager : NetworkBehaviour
         if (!IsServer) return;
 
         isGameActive.Value = false;
-        Debug.Log("[NetworkGameManager] KONIEC GRY!");
         EndGameClientRpc();
     }
 
@@ -270,7 +250,7 @@ public class NetworkGameManager : NetworkBehaviour
 
     private void OnGameActiveChanged(bool previous, bool current)
     {
-        Debug.Log($"[NetworkGameManager] Gra {(current ? "aktywna" : "nieaktywna")}");
+        // Można dodać logikę UI tutaj
     }
 
     #endregion

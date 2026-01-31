@@ -6,7 +6,7 @@ public class GridMovement : AbstractPlayer
     [SerializeField] private float gridSize = 1f;
     [SerializeField] private int gridWidth = 10;
     [SerializeField] private int gridHeight = 10;
-    [SerializeField] private Vector2 gridOrigin = Vector2.zero; // Bottom-left corner of grid in world space
+    [SerializeField] private Vector2 gridOrigin = Vector2.zero;
     
     private Vector3 targetPosition;
     private bool isMoving = false;
@@ -17,16 +17,11 @@ public class GridMovement : AbstractPlayer
         targetPosition = transform.position;
     }
 
-    private int debugCounter = 0;
-    
     override protected void MyUpdate()
     {
-        debugCounter++;
-        
-        // Sprawdź czy to lokalny gracz
+        // Sprawdź czy to lokalny gracz (multiplayer) lub zawsze (single-player)
         if (!InputHelper.CanPlayerMove(gameObject))
         {
-            if (debugCounter % 120 == 0) Debug.LogWarning($"[GridMovement] CanPlayerMove = false dla {gameObject.name}");
             return;
         }
 
@@ -34,7 +29,6 @@ public class GridMovement : AbstractPlayer
         var inputActions = InputHelper.GetInputActionsForPlayer(gameObject);
         if (inputActions == null)
         {
-            if (debugCounter % 120 == 0) Debug.LogWarning($"[GridMovement] Brak Input Actions dla {gameObject.name}!");
             return;
         }
 
@@ -42,9 +36,6 @@ public class GridMovement : AbstractPlayer
         {
             SetWalking(false);
             Vector2 input = inputActions.Player.Move.ReadValue<Vector2>();
-            
-            // Debug input tylko gdy się naciska
-            // if (input.magnitude > 0.1f) Debug.Log($"[GridMovement] Input: {input}");
             
             // Only move in one direction at a time (X-Z plane)
             Vector3 moveDirection = Vector3.zero;
@@ -63,16 +54,9 @@ public class GridMovement : AbstractPlayer
                 float minZ = gridOrigin.y;
                 float maxZ = gridOrigin.y + (gridHeight - 1) * gridSize;
                 
-                // Debug bounds (tylko raz na 5 sekund)
-                if (debugCounter % 300 == 0)
-                {
-                    Debug.Log($"[GridMovement] Pozycja: {transform.position}, Bounds: X[{minX},{maxX}] Z[{minZ},{maxZ}]");
-                }
-                
                 // Check if new position is within bounds
-                // Na razie WYŁĄCZONE - pozwól się poruszać wszędzie
-                // TODO: Napraw bounds dla multiplayer
-                bool withinBounds = true; // Tymczasowo zawsze true
+                // TODO: Napraw bounds dla multiplayer - na razie wyłączone
+                bool withinBounds = true;
                 /*
                 bool withinBounds = newPosition.x >= minX && newPosition.x <= maxX &&
                                    newPosition.z >= minZ && newPosition.z <= maxZ;
@@ -83,10 +67,6 @@ public class GridMovement : AbstractPlayer
                     targetPosition = newPosition;
                     isMoving = true;
                 }
-                else
-                {
-                    if (debugCounter % 60 == 0) Debug.LogWarning($"[GridMovement] Poza bounds! Nie mogę się ruszyć.");
-                }
             }
         }
         else
@@ -96,10 +76,11 @@ public class GridMovement : AbstractPlayer
             
             if (Vector3.Distance(transform.position, targetPosition) < 0.01f)
             {
-                transform.position = targetPosition; // Snap to exact position
+                transform.position = targetPosition;
                 isMoving = false;
             }
         }
+        
         Vector3 moveDirection3D = (targetPosition - transform.position).normalized;
         UpdateAnimationDirection(new Vector2(moveDirection3D.x, moveDirection3D.z));
     }
