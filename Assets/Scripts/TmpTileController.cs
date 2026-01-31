@@ -8,8 +8,9 @@ public class TmpTileController : MonoBehaviour
     [SerializeField] private Button blueButton;
     [SerializeField] private Button yellowButton;
     [SerializeField] private Button fireButton;
-    [SerializeField] private Button waterButton;
+    [SerializeField] private Button toxinButton;
     [SerializeField] private Button electricButton;
+    [SerializeField] private Button mechanicButton;
 
     void Start()
     {
@@ -19,7 +20,8 @@ public class TmpTileController : MonoBehaviour
         blueButton.onClick.AddListener(() => tileManager.SetupLights(Tile.LightCircuit.Blue));
         yellowButton.onClick.AddListener(() => tileManager.SetupLights(Tile.LightCircuit.Yellow));
         fireButton.onClick.AddListener(() => tileManager.SetupDangers(Danger.DangerType.Fire));
-        waterButton.onClick.AddListener(() => tileManager.SetupDangers(Danger.DangerType.Water));
         electricButton.onClick.AddListener(() => tileManager.SetupDangers(Danger.DangerType.Electric));
+        toxinButton.onClick.AddListener(() => tileManager.SetupDangers(Danger.DangerType.Toxic));
+        mechanicButton.onClick.AddListener(() => tileManager.SetupDangers(Danger.DangerType.Mechanic));
     }
 }

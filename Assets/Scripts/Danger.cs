@@ -11,6 +11,10 @@ public class Danger : MonoBehaviour
     [Space]
     private Collider dangerCollider;
     private MeshRenderer dangerMeshRenderer;
+    private GameObject anim2DObject;
+    private bool isDangerActive = false;
+    private bool isDangerVisible = false;
+    private float initialScaleY;
 
     public DangerType Type => dangerType;
     public Tile.LightCircuit LightCircuit => lightCircuit;
@@ -21,13 +25,33 @@ public class Danger : MonoBehaviour
     {
         dangerCollider = GetComponent<Collider>();
         dangerMeshRenderer = GetComponent<MeshRenderer>();
-        chosenDangerObject = dangerList.InstantiateRandomDanger(transform);
+        (chosenDangerObject, anim2DObject) = dangerList.InstantiateRandomDanger(transform);
+        anim2DObject?.gameObject.SetActive(false);
         dangerMeshRenderer = chosenDangerObject.GetComponent<MeshRenderer>();
+        initialScaleY = chosenDangerObject.transform.localScale.y;
     }
 
     void Start()
     {
         playerCollider = FindFirstObjectByType<GridMovement>()?.GetComponent<Collider>();
+    }
+
+    void Update()
+    {
+        if (isDangerActive)
+        {
+            float scaleY = 
+                initialScaleY * (1f + 0.1f * Mathf.Sin(Time.time * 5f));
+            Vector3 localScale = chosenDangerObject.transform.localScale;
+            localScale.z = scaleY;
+            chosenDangerObject.transform.localScale = localScale;
+        }
+        else
+        {
+            Vector3 localScale = chosenDangerObject.transform.localScale;
+            localScale.z = initialScaleY;
+            chosenDangerObject.transform.localScale = localScale;
+        }
     }
 
     void FixedUpdate()
@@ -41,17 +65,21 @@ public class Danger : MonoBehaviour
     public void SetDangerActive(bool isActive)
     {
         dangerCollider.enabled = isActive;
+        isDangerActive = isActive;
+        anim2DObject?.SetActive(isDangerVisible && isDangerActive);
     }
 
     public void SetDangerVisible(bool isVisible)
     {
         dangerMeshRenderer.enabled = isVisible;
+        isDangerVisible = isVisible;
+        anim2DObject?.SetActive(isDangerVisible && isDangerActive);
     }
 
     public enum DangerType
     {
         Fire,
-        Water,
+        Mechanic,
         Electric,
         Toxic   
     }
@@ -76,8 +104,9 @@ public class Danger : MonoBehaviour
         gizmoColor = dangerType switch
         {
             DangerType.Fire => Color.red,
-            DangerType.Water => Color.blue,
-            DangerType.Electric => Color.yellow,
+            DangerType.Electric => Color.blue,
+            DangerType.Mechanic => Color.yellow,
+            DangerType.Toxic => Color.green,
             _ => Color.white
         };
         gizmoColor.a = 0.9f;
