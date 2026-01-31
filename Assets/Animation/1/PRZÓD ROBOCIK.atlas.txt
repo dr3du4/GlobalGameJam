@@ -1,0 +1,65 @@
+PRZÓD ROBOCIK.png
+size:654,264
+filter:Linear,Linear
+pma:true
+scale:0.6
+arm L
+bounds:480,198,64,143
+rotate:90
+arm R
+bounds:2,12,76,123
+rotate:90
+body
+bounds:145,2,112,187
+offsets:0,0,113,187
+rotate:90
+eyes
+bounds:625,207,55,27
+offsets:1,0,56,27
+rotate:90
+eyes closed
+bounds:2,2,61,8
+offsets:1,0,62,8
+hand L
+bounds:542,18,53,43
+rotate:90
+hand R
+bounds:443,77,44,32
+offsets:1,1,46,33
+rotate:90
+happy
+bounds:582,77,22,17
+offsets:1,0,24,17
+head Down
+bounds:2,90,141,172
+offsets:0,1,142,173
+head UP
+bounds:145,116,162,146
+offsets:0,1,163,180
+lowerleg L
+bounds:334,4,57,104
+offsets:0,0,57,107
+rotate:90
+lowerleg R
+bounds:480,73,56,100
+offsets:0,0,60,100
+rotate:90
+nose
+bounds:440,2,18,12
+scarf DOWN
+bounds:334,63,107,58
+offsets:0,0,107,59
+scarf PRZÓD
+bounds:480,131,118,65
+scarf long
+bounds:309,123,139,169
+rotate:90
+smile
+bounds:127,66,22,9
+offsets:0,1,22,10
+rotate:90
+upperleg L
+bounds:443,16,55,97
+rotate:90
+upperlegR
+bounds:600,96,52,100

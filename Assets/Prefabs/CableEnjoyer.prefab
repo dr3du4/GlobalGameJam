@@ -343,8 +343,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4391695760442582624}
   - {fileID: 3981539377731914222}
@@ -373,9 +373,8 @@ GameObject:
   m_Component:
   - component: {fileID: 947464683495422532}
   - component: {fileID: 337845769041309002}
-  - component: {fileID: 6996397229685464715}
-  - component: {fileID: 1617061956835823529}
-  - component: {fileID: 2606424883351704839}
+  - component: {fileID: 5142934662512943618}
+  - component: {fileID: 8348960708988820384}
   m_Layer: 0
   m_Name: CableEnjoyer
   m_TagString: Player
@@ -415,8 +414,9 @@ MonoBehaviour:
   backAnimator: {fileID: 1547846352115337938}
   sideAnimator: {fileID: 7698850382474596887}
   speed: 5
---- !u!65 &6996397229685464715
-BoxCollider:
+  rb: {fileID: 8348960708988820384}
+--- !u!136 &5142934662512943618
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -433,51 +433,38 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 3, y: 7, z: 3}
-  m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &1617061956835823529
-MonoBehaviour:
+  serializedVersion: 2
+  m_Radius: 0.2
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &8348960708988820384
+Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5249651102347479665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2822866147
-  InScenePlacedSourceGlobalObjectIdHash: 3581548813
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 0
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
---- !u!114 &2606424883351704839
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5249651102347479665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d618483f9da764342aa445633d487546, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NetworkPlayerController
-  ShowTopMostFoldoutHeaderGroup: 1
-  movementSpine: {fileID: 337845769041309002}
-  gridMovement: {fileID: 0}
-  operatorCameraTag: OperatorCamera
-  CameraTag: RunnerCamera
+  serializedVersion: 5
+  m_Mass: 10
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 116
+  m_CollisionDetection: 0
 --- !u!1 &6057783960945466444
 GameObject:
   m_ObjectHideFlags: 0

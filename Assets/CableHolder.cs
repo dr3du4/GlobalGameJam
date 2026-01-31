@@ -14,7 +14,7 @@ public enum CableColor
 public class CableHolder : MonoBehaviour
 {
     [Header("Cable Settings")]
-    public float interactionRange = 2f;
+    public float interactionRange = 1f;
     public CableColor cableColor = CableColor.Yellow;
     public SplineContainer cableSplineContainer;
     public float cableSag = 0.5f; // How much the cable hangs down
@@ -22,12 +22,15 @@ public class CableHolder : MonoBehaviour
     
     [Header("References")]
     public Transform cableStartPoint; // The point where cable starts from this holder
+    public string emissiveMaterialName = "emmisive"; // Name of the emissive material
+    public CableVisualizer templateVisualizer; // Template to copy materials from (optional)
     
     private Transform player;
     private bool isPlayerNearby = false;
     private bool isCableHeld = false;
     private GameObject connectedServer = null;
     private Spline cableSpline;
+    private Material emissiveMaterial;
     
     void Start()
     {
@@ -46,8 +49,16 @@ public class CableHolder : MonoBehaviour
             CableVisualizer visualizer = splineObject.AddComponent<CableVisualizer>();
             visualizer.cableRadius = 0.05f;
             
-            // Set cable color based on holder color
-            UpdateCableColor(visualizer);
+            // Copy material references from template if available
+            if (templateVisualizer != null)
+            {
+                visualizer.yellowCableMaterial = templateVisualizer.yellowCableMaterial;
+                visualizer.redCableMaterial = templateVisualizer.redCableMaterial;
+                visualizer.greenCableMaterial = templateVisualizer.greenCableMaterial;
+                visualizer.blueCableMaterial = templateVisualizer.blueCableMaterial;
+            }
+            
+            // The visualizer will select the right material in its Start() based on cableColor
         }
         
         // Create initial spline
@@ -58,12 +69,7 @@ public class CableHolder : MonoBehaviour
             cableSplineContainer.Spline = cableSpline;
         }
         
-        // Update color if visualizer already exists
-        CableVisualizer existingVisualizer = cableSplineContainer.GetComponent<CableVisualizer>();
-        if (existingVisualizer != null)
-        {
-            UpdateCableColor(existingVisualizer);
-        }
+        // Visualizer will select the correct material in its Start() based on cableColor
         
         // Set cable start point to this object if not assigned
         if (cableStartPoint == null)
@@ -73,6 +79,46 @@ public class CableHolder : MonoBehaviour
         
         // Hide spline initially
         cableSplineContainer.gameObject.SetActive(false);
+        
+        // Find and update emissive material color on holder
+        FindAndUpdateEmissiveMaterial();
+    }
+    
+    void FindAndUpdateEmissiveMaterial()
+    {
+        // Get all renderers in this object and children
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        
+        foreach (Renderer renderer in renderers)
+        {
+            foreach (Material mat in renderer.materials)
+            {
+                // Check if material name contains "emmisive" or "emissive"
+                if (mat.name.ToLower().Contains("emmisive") || mat.name.ToLower().Contains("emissive"))
+                {
+                    emissiveMaterial = mat;
+                    UpdateHolderEmissiveColor();
+                    return;
+                }
+            }
+        }
+        
+        Debug.LogWarning($"Emissive material not found on CableHolder: {gameObject.name}");
+    }
+    
+    void UpdateHolderEmissiveColor()
+    {
+        if (emissiveMaterial == null) return;
+        
+        Color color = GetColorFromEnum(cableColor);
+        
+        // Set base color
+        emissiveMaterial.color = color;
+        emissiveMaterial.SetColor("_Color", color);
+        
+        // Set emission color for glow effect
+        emissiveMaterial.EnableKeyword("_EMISSION");
+        emissiveMaterial.SetColor("_EmissionColor", color * 2f); // Brighter emission
     }
     
     void Update()
@@ -83,10 +129,13 @@ public class CableHolder : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         isPlayerNearby = distanceToPlayer <= interactionRange;
         
+        // Only interact with the CLOSEST cable holder
+        bool isClosest = IsClosestCableHolder();
+        
         // Handle E key press - pick up cable
         if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
         {
-            if (isPlayerNearby && !isCableHeld && connectedServer == null)
+            if (isPlayerNearby && isClosest && !isCableHeld && connectedServer == null)
             {
                 PickUpCable();
             }
@@ -95,7 +144,7 @@ public class CableHolder : MonoBehaviour
         // Handle F key press - return cable to holder
         if (Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame)
         {
-            if (isPlayerNearby && isCableHeld && connectedServer == null)
+            if (isPlayerNearby && isClosest && isCableHeld && connectedServer == null)
             {
                 // Player is holding cable and near holder - hang it back
                 ReturnCableToHolder();
@@ -107,6 +156,27 @@ public class CableHolder : MonoBehaviour
         {
             UpdateCableVisual();
         }
+    }
+    
+    bool IsClosestCableHolder()
+    {
+        if (!isPlayerNearby) return false;
+        
+        CableHolder[] allHolders = FindObjectsByType<CableHolder>(FindObjectsSortMode.None);
+        float myDistance = Vector3.Distance(transform.position, player.position);
+        
+        foreach (CableHolder holder in allHolders)
+        {
+            if (holder == this) continue;
+            
+            float otherDistance = Vector3.Distance(holder.transform.position, player.position);
+            if (otherDistance <= holder.interactionRange && otherDistance < myDistance)
+            {
+                return false; // Found a closer one
+            }
+        }
+        
+        return true; // This is the closest
     }
     
     void PickUpCable()
@@ -228,28 +298,30 @@ public class CableHolder : MonoBehaviour
         return cableColor;
     }
     
-    void UpdateCableColor(CableVisualizer visualizer)
+    Color GetColorFromEnum(CableColor color)
     {
-        if (visualizer == null || visualizer.cableMaterial == null) return;
-        
-        Color color = Color.white;
-        switch (cableColor)
+        switch (color)
         {
             case CableColor.Yellow:
-                color = Color.yellow;
-                break;
+                return new Color(1f, 0.92f, 0.016f); // Bright yellow
             case CableColor.Red:
-                color = Color.red;
-                break;
+                return new Color(1f, 0f, 0f); // Pure red
             case CableColor.Green:
-                color = Color.green;
-                break;
+                return new Color(0f, 1f, 0f); // Pure green
             case CableColor.Blue:
-                color = Color.blue;
-                break;
+                return new Color(0f, 0.5f, 1f); // Bright blue
+            default:
+                return Color.white;
         }
-        
-        visualizer.cableMaterial.color = color;
+    }
+    
+    void OnValidate()
+    {
+        // Update holder emissive color when values change in inspector
+        if (Application.isPlaying)
+        {
+            FindAndUpdateEmissiveMaterial();
+        }
     }
     
     // Visual feedback in editor
@@ -273,7 +345,9 @@ public class CableHolder : MonoBehaviour
                 break;
         }
         
-        Gizmos.color = isPlayerNearby ? gizmoColor : gizmoColor * 0.5f;
+        // Brighter if this is the closest holder to player
+        bool isClosest = IsClosestCableHolder();
+        Gizmos.color = (isPlayerNearby && isClosest) ? gizmoColor : gizmoColor * 0.5f;
         Gizmos.DrawWireSphere(transform.position, interactionRange);
         
         if (isCableHeld)

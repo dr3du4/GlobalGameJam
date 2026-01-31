@@ -10,6 +10,12 @@ public class CableVisualizer : MonoBehaviour
     public int radialSegments = 8;
     public int lengthSegments = 50;
     
+    [Header("Cable Materials (in order: Yellow, Red, Green, Blue)")]
+    public Material yellowCableMaterial;
+    public Material redCableMaterial;
+    public Material greenCableMaterial;
+    public Material blueCableMaterial;
+    
     private SplineContainer splineContainer;
     private MeshFilter meshFilter;
     private MeshRenderer meshRenderer;
@@ -30,15 +36,45 @@ public class CableVisualizer : MonoBehaviour
         {
             meshRenderer = gameObject.AddComponent<MeshRenderer>();
         }
+    }
+    
+    void Start()
+    {
+        // Get CableHolder from parent to determine color
+        CableHolder holder = GetComponentInParent<CableHolder>();
         
-        // Set default material if none assigned
-        if (cableMaterial == null)
+        if (holder != null)
         {
-            cableMaterial = new Material(Shader.Find("Standard"));
-            cableMaterial.color = Color.black;
+            // Select material based on cable color
+            switch (holder.cableColor)
+            {
+                case CableColor.Yellow:
+                    cableMaterial = yellowCableMaterial;
+                    break;
+                case CableColor.Red:
+                    cableMaterial = redCableMaterial;
+                    break;
+                case CableColor.Green:
+                    cableMaterial = greenCableMaterial;
+                    break;
+                case CableColor.Blue:
+                    cableMaterial = blueCableMaterial;
+                    break;
+            }
         }
         
-        meshRenderer.material = cableMaterial;
+        // Fallback to default if no material assigned
+        if (cableMaterial == null)
+        {
+            Debug.LogWarning("No cable material assigned! Using default.");
+            cableMaterial = new Material(Shader.Find("Standard"));
+            cableMaterial.color = Color.magenta; // Magenta to make it obvious
+        }
+        
+        if (meshRenderer != null)
+        {
+            meshRenderer.material = cableMaterial;
+        }
     }
     
     void LateUpdate()

@@ -73,6 +73,7 @@ public class GridMovement : AbstractPlayer
         {
             SetWalking(true);
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+            // Debug.Log($"{transform.position}");
             
             if (Vector3.Distance(transform.position, targetPosition) < 0.01f)
             {
