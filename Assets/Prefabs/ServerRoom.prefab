@@ -346,6 +346,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5353903555030199022}
     m_Modifications:
+    - target: {fileID: 4444802421081032649, guid: 2cefe0a2aa5399ce3a3e990eb05523c3, type: 3}
+      propertyPath: connectionRange
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4870720130711453047, guid: 2cefe0a2aa5399ce3a3e990eb05523c3, type: 3}
       propertyPath: m_Name
       value: Serwer

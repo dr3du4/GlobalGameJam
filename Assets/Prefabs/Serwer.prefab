@@ -101,7 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb7650575b89e2d4baae9fc344128405, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ServerConnection
-  connectionRange: 2
+  connectionRange: 0.8
   serverColor: 0
   isCableConnected: 0
   connectedIndicator: {fileID: 0}

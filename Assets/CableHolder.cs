@@ -14,7 +14,7 @@ public enum CableColor
 public class CableHolder : MonoBehaviour
 {
     [Header("Cable Settings")]
-    public float interactionRange = 2f;
+    public float interactionRange = 1f;
     public CableColor cableColor = CableColor.Yellow;
     public SplineContainer cableSplineContainer;
     public float cableSag = 0.5f; // How much the cable hangs down
@@ -83,10 +83,13 @@ public class CableHolder : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         isPlayerNearby = distanceToPlayer <= interactionRange;
         
+        // Only interact with the CLOSEST cable holder
+        bool isClosest = IsClosestCableHolder();
+        
         // Handle E key press - pick up cable
         if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
         {
-            if (isPlayerNearby && !isCableHeld && connectedServer == null)
+            if (isPlayerNearby && isClosest && !isCableHeld && connectedServer == null)
             {
                 PickUpCable();
             }
@@ -95,7 +98,7 @@ public class CableHolder : MonoBehaviour
         // Handle F key press - return cable to holder
         if (Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame)
         {
-            if (isPlayerNearby && isCableHeld && connectedServer == null)
+            if (isPlayerNearby && isClosest && isCableHeld && connectedServer == null)
             {
                 // Player is holding cable and near holder - hang it back
                 ReturnCableToHolder();
@@ -107,6 +110,27 @@ public class CableHolder : MonoBehaviour
         {
             UpdateCableVisual();
         }
+    }
+    
+    bool IsClosestCableHolder()
+    {
+        if (!isPlayerNearby) return false;
+        
+        CableHolder[] allHolders = FindObjectsByType<CableHolder>(FindObjectsSortMode.None);
+        float myDistance = Vector3.Distance(transform.position, player.position);
+        
+        foreach (CableHolder holder in allHolders)
+        {
+            if (holder == this) continue;
+            
+            float otherDistance = Vector3.Distance(holder.transform.position, player.position);
+            if (otherDistance <= holder.interactionRange && otherDistance < myDistance)
+            {
+                return false; // Found a closer one
+            }
+        }
+        
+        return true; // This is the closest
     }
     
     void PickUpCable()
@@ -230,26 +254,53 @@ public class CableHolder : MonoBehaviour
     
     void UpdateCableColor(CableVisualizer visualizer)
     {
-        if (visualizer == null || visualizer.cableMaterial == null) return;
+        if (visualizer == null) return;
         
-        Color color = Color.white;
-        switch (cableColor)
+        Color color = GetColorFromEnum(cableColor);
+        
+        // Create new material instance to avoid changing the original asset
+        if (visualizer.cableMaterial == null)
         {
-            case CableColor.Yellow:
-                color = Color.yellow;
-                break;
-            case CableColor.Red:
-                color = Color.red;
-                break;
-            case CableColor.Green:
-                color = Color.green;
-                break;
-            case CableColor.Blue:
-                color = Color.blue;
-                break;
+            visualizer.cableMaterial = new Material(Shader.Find("Standard"));
         }
         
+        // Set both base color and emission
         visualizer.cableMaterial.color = color;
+        visualizer.cableMaterial.SetColor("_Color", color);
+        
+        // Make it slightly emissive for visibility
+        visualizer.cableMaterial.EnableKeyword("_EMISSION");
+        visualizer.cableMaterial.SetColor("_EmissionColor", color * 0.3f);
+    }
+    
+    Color GetColorFromEnum(CableColor color)
+    {
+        switch (color)
+        {
+            case CableColor.Yellow:
+                return new Color(1f, 0.92f, 0.016f); // Bright yellow
+            case CableColor.Red:
+                return new Color(1f, 0f, 0f); // Pure red
+            case CableColor.Green:
+                return new Color(0f, 1f, 0f); // Pure green
+            case CableColor.Blue:
+                return new Color(0f, 0.5f, 1f); // Bright blue
+            default:
+                return Color.white;
+        }
+    }
+    
+    void OnValidate()
+    {
+        // Update cable color when values change in inspector
+        if (Application.isPlaying && cableSplineContainer != null)
+        {
+            CableVisualizer visualizer = cableSplineContainer.GetComponent<CableVisualizer>();
+            if (visualizer != null)
+            {
+                UpdateCableColor(visualizer);
+            }
+        }
     }
     
     // Visual feedback in editor
@@ -273,7 +324,9 @@ public class CableHolder : MonoBehaviour
                 break;
         }
         
-        Gizmos.color = isPlayerNearby ? gizmoColor : gizmoColor * 0.5f;
+        // Brighter if this is the closest holder to player
+        bool isClosest = IsClosestCableHolder();
+        Gizmos.color = (isPlayerNearby && isClosest) ? gizmoColor : gizmoColor * 0.5f;
         Gizmos.DrawWireSphere(transform.position, interactionRange);
         
         if (isCableHeld)

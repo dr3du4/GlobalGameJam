@@ -4,18 +4,20 @@ using UnityEngine.InputSystem;
 public class ServerConnection : MonoBehaviour
 {
     [Header("Connection Settings")]
-    public float connectionRange = 2f;
+    public float connectionRange = 1f;
     public CableColor serverColor = CableColor.Yellow;
     public bool isCableConnected = false;
     
     [Header("Visual Feedback")]
     public GameObject connectedIndicator; // Optional: object to show when connected
+    public string emissiveMaterialName = "emmisive"; // Name of the emissive material
     [SerializeField] private Tile.LightCircuit tileLightCircuit;
     [SerializeField] private Danger.DangerType dangerType;
     
     private Transform player;
     private CableHolder nearbyCable = null;
     private bool isPlayerNearby = false;
+    private Material emissiveMaterial;
     
     void Start()
     {
@@ -32,6 +34,63 @@ public class ServerConnection : MonoBehaviour
         {
             connectedIndicator.SetActive(false);
         }
+        
+        // Find and update emissive material color
+        FindAndUpdateEmissiveMaterial();
+    }
+    
+    void FindAndUpdateEmissiveMaterial()
+    {
+        // Get all renderers in this object and children
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        
+        foreach (Renderer renderer in renderers)
+        {
+            foreach (Material mat in renderer.materials)
+            {
+                // Check if material name contains "emmisive" or "emissive"
+                if (mat.name.ToLower().Contains("emmisive") || mat.name.ToLower().Contains("emissive"))
+                {
+                    emissiveMaterial = mat;
+                    UpdateEmissiveColor();
+                    return;
+                }
+            }
+        }
+        
+        Debug.LogWarning($"Emissive material not found on {gameObject.name}");
+    }
+    
+    void UpdateEmissiveColor()
+    {
+        if (emissiveMaterial == null) return;
+        
+        Color color = GetColorFromEnum(serverColor);
+        
+        // Set base color
+        emissiveMaterial.color = color;
+        emissiveMaterial.SetColor("_Color", color);
+        
+        // Set emission color for glow effect
+        emissiveMaterial.EnableKeyword("_EMISSION");
+        emissiveMaterial.SetColor("_EmissionColor", color * 2f); // Brighter emission
+    }
+    
+    Color GetColorFromEnum(CableColor color)
+    {
+        switch (color)
+        {
+            case CableColor.Yellow:
+                return new Color(1f, 0.92f, 0.016f); // Bright yellow
+            case CableColor.Red:
+                return new Color(1f, 0f, 0f); // Pure red
+            case CableColor.Green:
+                return new Color(0f, 1f, 0f); // Pure green
+            case CableColor.Blue:
+                return new Color(0f, 0.5f, 1f); // Bright blue
+            default:
+                return Color.white;
+        }
     }
     
     void Update()
@@ -42,8 +101,11 @@ public class ServerConnection : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         isPlayerNearby = distanceToPlayer <= connectionRange;
         
+        // Only interact with the CLOSEST server
+        bool isClosest = IsClosestServer();
+        
         // Check if player is holding a cable (when not connected)
-        if (isPlayerNearby && !isCableConnected)
+        if (isPlayerNearby && isClosest && !isCableConnected)
         {
             FindNearbyCable();
             
@@ -66,7 +128,7 @@ public class ServerConnection : MonoBehaviour
         }
         
         // Disconnect cable with F key when connected
-        if (isPlayerNearby && isCableConnected)
+        if (isPlayerNearby && isClosest && isCableConnected)
         {
             if (Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame)
             {
@@ -74,10 +136,31 @@ public class ServerConnection : MonoBehaviour
             }
         }
     }
+    
+    bool IsClosestServer()
+    {
+        if (!isPlayerNearby) return false;
+        
+        ServerConnection[] allServers = FindObjectsByType<ServerConnection>(FindObjectsSortMode.None);
+        float myDistance = Vector3.Distance(transform.position, player.position);
+        
+        foreach (ServerConnection server in allServers)
+        {
+            if (server == this) continue;
+            
+            float otherDistance = Vector3.Distance(server.transform.position, player.position);
+            if (otherDistance <= server.connectionRange && otherDistance < myDistance)
+            {
+                return false; // Found a closer one
+            }
+        }
+        
+        return true; // This is the closest
+    }
 
     private void OnInteractPressed(InputAction.CallbackContext context)
     {
-        if (isPlayerNearby)
+        if (isPlayerNearby && IsClosestServer())
         {
             FindNearbyCable();
             
@@ -197,6 +280,15 @@ public class ServerConnection : MonoBehaviour
         FindFirstObjectByType<TileManager>()?.ClearAll();
     }
     
+    void OnValidate()
+    {
+        // Update colors when values change in inspector
+        if (Application.isPlaying)
+        {
+            FindAndUpdateEmissiveMaterial();
+        }
+    }
+    
     // Visual feedback in editor
     void OnDrawGizmos()
     {
@@ -218,10 +310,11 @@ public class ServerConnection : MonoBehaviour
                 break;
         }
         
-        // Brighter when connected, medium when player nearby, darker when far
+        // Brighter when connected or when this is the closest server to player
+        bool isClosest = IsClosestServer();
         if (isCableConnected)
             Gizmos.color = gizmoColor;
-        else if (isPlayerNearby)
+        else if (isPlayerNearby && isClosest)
             Gizmos.color = gizmoColor * 0.8f;
         else
             Gizmos.color = gizmoColor * 0.5f;
