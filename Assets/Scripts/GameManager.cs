@@ -20,23 +20,14 @@ public class GameManager : MonoBehaviour
         inputActions.Player.Enable();
         mainCamera.enabled = true;
         secondCamera.enabled = false;
+        inputActions.Player.Jump.performed += OnSpacePressed;
     }
 
-    void Update()
+    void OnSpacePressed(InputAction.CallbackContext context)
     {
-        if (Keyboard.current != null)
-        {
-            bool isSpacePressed = Keyboard.current.spaceKey.isPressed;
-           
-            if (isSpacePressed && !wasSpacePressed)
-            {
-                Debug.Log("Use first map: " + useFirstMap);
-                useFirstMap = !useFirstMap;
-                mainCamera.enabled = !mainCamera.enabled;
-                secondCamera.enabled = !secondCamera.enabled;
-            }
-            
-            wasSpacePressed = isSpacePressed;
-        }
+        Debug.Log("Use first map: " + useFirstMap);
+        useFirstMap = !useFirstMap;
+        mainCamera.enabled = !mainCamera.enabled;
+        secondCamera.enabled = !secondCamera.enabled;
     }
 }
