@@ -12241,7 +12241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d87181bd8f246942bba639744620fe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManger
-  nextLevelName: Level2
+  nextLevelName: Menu
   mainCamera: {fileID: 2041193419}
   secondCamera: {fileID: 2142147913}
 --- !u!1001 &1322720584
