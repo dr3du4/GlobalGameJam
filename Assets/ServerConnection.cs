@@ -201,6 +201,9 @@ public class ServerConnection : MonoBehaviour
     {
         if (nearbyCable == null) return;
         
+        // Najpierw odłącz wszystkie inne kable - tylko jeden może być podłączony
+        DisconnectAllOtherCables();
+        
         nearbyCable.ConnectToServer(gameObject);
         isCableConnected = true;
         
@@ -213,6 +216,38 @@ public class ServerConnection : MonoBehaviour
         
         // Call any game logic here
         OnCablePluggedIn();
+    }
+    
+    void DisconnectAllOtherCables()
+    {
+        ServerConnection[] allServers = FindObjectsByType<ServerConnection>(FindObjectsSortMode.None);
+        
+        foreach (ServerConnection server in allServers)
+        {
+            if (server == this) continue;
+            
+            if (server.isCableConnected)
+            {
+                Debug.Log($"Odłączam poprzedni kabel z {server.gameObject.name}");
+                server.ForceDisconnect();
+            }
+        }
+    }
+    
+    public void ForceDisconnect()
+    {
+        if (nearbyCable != null)
+        {
+            nearbyCable.ReturnCableToHolder();
+        }
+        
+        isCableConnected = false;
+        nearbyCable = null;
+        
+        if (connectedIndicator != null)
+        {
+            connectedIndicator.SetActive(false);
+        }
     }
     
     public void OnCableConnected(CableHolder cable)
