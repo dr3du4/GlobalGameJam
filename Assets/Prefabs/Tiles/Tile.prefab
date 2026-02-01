@@ -46,7 +46,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tile
   lightCircuit: 0
-  glowIntensity: 30
+  whiteGlowIntensity: 8
+  redGlowIntensity: 40
+  greenGlowIntensity: 30
+  blueGlowIntensity: 40
+  yellowGlowIntensity: 20
   tileMeshRenderer: {fileID: 1434742263333556867}
 --- !u!1001 &299682740899286535
 PrefabInstance:

@@ -3,14 +3,26 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     [SerializeField] private LightCircuit lightCircuit;
-    [SerializeField] private float glowIntensity = 50f;
+    [SerializeField] private float whiteGlowIntensity = 8f;
+    [SerializeField] private float redGlowIntensity = 40f;
+    [SerializeField] private float greenGlowIntensity = 30f;
+    [SerializeField] private float blueGlowIntensity = 40f;
+    [SerializeField] private float yellowGlowIntensity = 20f;
     [Space]
     [SerializeField] private MeshRenderer tileMeshRenderer;
     private Material tileMaterial;
     private Material glowingTileMaterial;
 
     public LightCircuit Circuit => lightCircuit;
-
+    private float glowIntensity => lightCircuit switch
+    {
+        LightCircuit.Red => redGlowIntensity,
+        LightCircuit.Green => greenGlowIntensity,
+        LightCircuit.Blue => blueGlowIntensity,
+        LightCircuit.Yellow => yellowGlowIntensity,
+        LightCircuit.White => whiteGlowIntensity,
+        _ => 0f
+    };
     void Awake()
     {
         tileMaterial = tileMeshRenderer.materials[1];
@@ -25,7 +37,17 @@ public class Tile : MonoBehaviour
             _ => Color.white
         };
         glowingTileMaterial.SetColor("_EmissionColor", color * glowIntensity);
-    } 
+    }
+
+    void Update()
+    {
+        if (lightCircuit == LightCircuit.White)
+        {
+            float emission = 1 + Mathf.PingPong(Time.time * glowIntensity, glowIntensity);
+            Color baseColor = Color.white;
+            glowingTileMaterial.SetColor("_EmissionColor", baseColor * emission * glowIntensity);
+        }
+    }
 
     public void SetTileVisible(bool isVisible)
     {

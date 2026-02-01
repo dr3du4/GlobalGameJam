@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-
+    public string nextLevelName = "Level2";
     public bool useFirstMap { get; private set; } = true;
     public static GameManager instance;
     // public RoomGenerator roomGenerator;
@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     public Camera secondCamera;
 
     public bool isCableEnjoyerChosen { get; private set; } = true;
+
+    private bool isNextLevelCalled = false;
     void Awake()
     {
         instance = this;
@@ -73,5 +75,20 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         Debug.Log("Restarting level...");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void NextLevel()
+    {
+        if (!isNextLevelCalled)
+        {
+            isNextLevelCalled = true;
+            StartCoroutine(NextLevelCoroutine());
+        }
+    }
+
+    private IEnumerator NextLevelCoroutine()
+    {
+        yield return new WaitForSeconds(1f);
+        SceneManager.LoadScene(nextLevelName);
     }
 }

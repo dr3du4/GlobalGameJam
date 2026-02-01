@@ -21,6 +21,7 @@ public class TileManager : MonoBehaviour
             danger.SetDangerActive(false);
             danger.SetDangerVisible(false);
         }
+        SetupLights(Tile.LightCircuit.White);
     }
 
     public void SetupDangers(Danger.DangerType dangerType)
@@ -49,7 +50,7 @@ public class TileManager : MonoBehaviour
         foreach (var tile in tiles)
         {
             tile.SetTileVisible(false);
-            if (tile.Circuit == circuit)
+            if (tile.Circuit == circuit || tile.Circuit == Tile.LightCircuit.White)
             {
                 tile.SetTileVisible(true);
             }

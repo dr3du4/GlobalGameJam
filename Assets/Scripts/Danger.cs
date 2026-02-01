@@ -78,8 +78,8 @@ public class Danger : MonoBehaviour
 
     public void SetDangerActive(bool isActive)
     {
-        dangerCollider.enabled = isActive;
-        isDangerActive = isActive;
+        dangerCollider.enabled = !isActive;
+        isDangerActive = !isActive;
         UpdateVisibility();
     }
 
