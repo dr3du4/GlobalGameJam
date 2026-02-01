@@ -3058,9 +3058,33 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 7242014259992105325, guid: 38c13ddcf4e4f8dcf9ca360441adc3d5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7242014259992105325, guid: 38c13ddcf4e4f8dcf9ca360441adc3d5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7242014259992105325, guid: 38c13ddcf4e4f8dcf9ca360441adc3d5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7242014259992105325, guid: 38c13ddcf4e4f8dcf9ca360441adc3d5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7242014259992105325, guid: 38c13ddcf4e4f8dcf9ca360441adc3d5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7242014259992105325, guid: 38c13ddcf4e4f8dcf9ca360441adc3d5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8684438422139222884, guid: 38c13ddcf4e4f8dcf9ca360441adc3d5, type: 3}
       propertyPath: gridWidth
-      value: 8
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8684438422139222884, guid: 38c13ddcf4e4f8dcf9ca360441adc3d5, type: 3}
       propertyPath: moveSpeed
@@ -3068,7 +3092,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8684438422139222884, guid: 38c13ddcf4e4f8dcf9ca360441adc3d5, type: 3}
       propertyPath: gridHeight
-      value: 8
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

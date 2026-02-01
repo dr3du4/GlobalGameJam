@@ -31,7 +31,8 @@ public class GridMovement : AbstractPlayer
             else if (Mathf.Abs(input.y) > 0.5f)
                 moveDirection = new Vector3(0, 0, Mathf.Sign(input.y));
             
-            if (moveDirection != Vector3.zero)
+            bool hit = Physics.Raycast(transform.position + Vector3.up * 0.5f, moveDirection, out RaycastHit hitInfo, gridSize, LayerMask.GetMask("walls"));
+            if (moveDirection != Vector3.zero && !hit)
             {
                 Vector3 newPosition = transform.position + moveDirection * gridSize;
                 
