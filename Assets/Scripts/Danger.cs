@@ -1,17 +1,22 @@
+using System.Linq;
 using Spine.Unity.Editor;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
 public class Danger : MonoBehaviour
 {
     [SerializeField] private DangerType dangerType;
-    [SerializeField] private Tile.LightCircuit lightCircuit;
-    [SerializeField] private DangerList dangerList;
-    [SerializeField] private GameObject chosenDangerObject;
+    private Tile.LightCircuit lightCircuit;
+    private Tile closestTile;
+    // [SerializeField] private DangerList dangerList;
+    // [SerializeField] private GameObject inactiveDangerModel;
+    // [SerializeField] private GameObject activeDangerModel;
     [Space]
     private Collider dangerCollider;
-    private MeshRenderer dangerMeshRenderer;
-    private GameObject anim2DObject;
+    [SerializeField] private MeshRenderer inactiveDangerMeshRenderer;
+    [SerializeField] private MeshRenderer activeDangerMeshRenderer;
+    [SerializeField] private GameObject anim2DObject;
     private bool isDangerActive = false;
     private bool isDangerVisible = false;
     private float initialScaleY;
@@ -24,34 +29,40 @@ public class Danger : MonoBehaviour
     void Awake()
     {
         dangerCollider = GetComponent<Collider>();
-        dangerMeshRenderer = GetComponent<MeshRenderer>();
-        (chosenDangerObject, anim2DObject) = dangerList.InstantiateRandomDanger(transform);
-        anim2DObject?.gameObject.SetActive(false);
-        dangerMeshRenderer = chosenDangerObject.GetComponent<MeshRenderer>();
-        initialScaleY = chosenDangerObject.transform.localScale.y;
+        // (chosenDangerObject, anim2DObject) = dangerList.InstantiateRandomDanger(transform);
+        anim2DObject?.SetActive(false);
+        
+        // inactiveDangerMeshRenderer = inactiveDangerModel.GetComponent<MeshRenderer>();
+
     }
 
     void Start()
     {
         playerCollider = FindFirstObjectByType<GridMovement>()?.GetComponent<Collider>();
+        closestTile = FindObjectsByType<Tile>(FindObjectsSortMode.None)
+            .OrderBy(t => Vector3.Distance(t.transform.position, transform.position))
+            .First();
+        lightCircuit = closestTile.Circuit;
+        initialScaleY = activeDangerMeshRenderer.transform.localScale.y;
+        UpdateVisibility();
     }
 
     void Update()
     {
-        if (isDangerActive)
-        {
+        // if (isDangerActive)
+        // {
             float scaleY = 
                 initialScaleY * (1f + 0.1f * Mathf.Sin(Time.time * 5f));
-            Vector3 localScale = chosenDangerObject.transform.localScale;
+            Vector3 localScale = activeDangerMeshRenderer.transform.localScale;
             localScale.z = scaleY;
-            chosenDangerObject.transform.localScale = localScale;
-        }
-        else
-        {
-            Vector3 localScale = chosenDangerObject.transform.localScale;
-            localScale.z = initialScaleY;
-            chosenDangerObject.transform.localScale = localScale;
-        }
+            activeDangerMeshRenderer.transform.localScale = localScale;
+        // }
+        // else
+        // {
+        //     Vector3 localScale = activeDangerMeshRenderer.transform.localScale;
+        //     localScale.z = initialScaleY;
+        //     activeDangerMeshRenderer.transform.localScale = localScale;
+        // }
     }
 
     void FixedUpdate()
@@ -66,14 +77,25 @@ public class Danger : MonoBehaviour
     {
         dangerCollider.enabled = isActive;
         isDangerActive = isActive;
-        anim2DObject?.SetActive(isDangerVisible && isDangerActive);
+        UpdateVisibility();
     }
 
     public void SetDangerVisible(bool isVisible)
     {
-        dangerMeshRenderer.enabled = isVisible;
+        // inactiveDangerMeshRenderer.enabled = isVisible;
         isDangerVisible = isVisible;
+        UpdateVisibility();
+    }
+
+    private void UpdateVisibility()
+    {
         anim2DObject?.SetActive(isDangerVisible && isDangerActive);
+        if (closestTile.Circuit != Tile.LightCircuit.Gray)
+        {
+            closestTile?.gameObject?.SetActive(!isDangerVisible);
+        }
+        inactiveDangerMeshRenderer.enabled = !isDangerActive && isDangerVisible;
+        activeDangerMeshRenderer.enabled = isDangerActive && isDangerVisible;
     }
 
     public enum DangerType
@@ -86,22 +108,22 @@ public class Danger : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Color gizmoColor = lightCircuit switch
-        {
-            Tile.LightCircuit.Red => Color.red,
-            Tile.LightCircuit.Green => Color.green,
-            Tile.LightCircuit.Blue => Color.blue,
-            Tile.LightCircuit.Yellow => Color.yellow,
-            _ => Color.white
-        };
-        gizmoColor.a = 0.5f;
+        // Color gizmoColor = lightCircuit switch
+        // {
+        //     Tile.LightCircuit.Red => Color.red,
+        //     Tile.LightCircuit.Green => Color.green,
+        //     Tile.LightCircuit.Blue => Color.blue,
+        //     Tile.LightCircuit.Yellow => Color.yellow,
+        //     _ => Color.white
+        // };
+        // gizmoColor.a = 0.5f;
 
-        Gizmos.color = gizmoColor;
-        Vector3 pos = transform.position + new Vector3(-0.21f, 0.5f, 0f);
-        pos.y = 0.1f;
-        Gizmos.DrawCube(pos, new Vector3(0.4f, 0.01f, 0.8f));
+        // Gizmos.color = gizmoColor;
+        // Vector3 pos = transform.position + new Vector3(-0.21f, 0.5f, 0f);
+        // pos.y = 0.1f;
+        // Gizmos.DrawCube(pos, new Vector3(0.4f, 0.01f, 0.8f));
 
-        gizmoColor = dangerType switch
+        Color gizmoColor = dangerType switch
         {
             DangerType.Fire => Color.red,
             DangerType.Electric => Color.blue,
@@ -110,9 +132,11 @@ public class Danger : MonoBehaviour
             _ => Color.white
         };
         gizmoColor.a = 0.9f;
-
         Gizmos.color = gizmoColor;
-        pos.y = 0.1f;
-        Gizmos.DrawCube(pos, new Vector3(0.2f, 0.01f, 0.6f));
+
+        Gizmos.DrawCube(
+            new Vector3(transform.position.x - 0.2f, 0.1f, transform.position.z), 
+            new Vector3(0.4f, 0.01f, 0.2f)
+        );
     }
 }

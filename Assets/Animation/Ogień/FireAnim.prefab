@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4497139449103350182}
   - component: {fileID: 3162296579411282744}
   - component: {fileID: 1889856680671252986}
+  - component: {fileID: -6052537642555891852}
   m_Layer: 0
   m_Name: FireAnim
   m_TagString: Untagged
@@ -171,4 +172,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad38f1a8b92603c11a15e24522708678, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Banner
-  isGridWalkerBanner: 0
+  isGridWalkerBanner: 1
+--- !u!114 &-6052537642555891852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8274017343606443810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95813afe390494344a6ce2cbc8bfb7d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: spine-unity::Spine.Unity.SkeletonMecanimRootMotion
+  rootMotionBoneName: root
+  transformPositionX: 1
+  transformPositionY: 1
+  transformRotation: 0
+  rootMotionScaleX: 1
+  rootMotionScaleY: 1
+  rootMotionScaleRotation: 1
+  rootMotionTranslateXPerY: 0
+  rootMotionTranslateYPerX: 0
+  rigidBody2D: {fileID: 0}
+  applyRigidbody2DGravity: 0
+  rigidBody: {fileID: 0}
+  disableOnOverride: 1
+  mecanimLayerFlags: -1

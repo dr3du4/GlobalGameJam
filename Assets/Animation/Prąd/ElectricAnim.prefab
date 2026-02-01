@@ -171,4 +171,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad38f1a8b92603c11a15e24522708678, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Banner
-  isGridWalkerBanner: 0
+  isGridWalkerBanner: 1
