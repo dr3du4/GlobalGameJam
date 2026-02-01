@@ -11,8 +11,6 @@ public class ServerConnection : MonoBehaviour
     [Header("Visual Feedback")]
     public GameObject connectedIndicator; // Optional: object to show when connected
     public string emissiveMaterialName = "emmisive"; // Name of the emissive material
-    [SerializeField] private Tile.LightCircuit tileLightCircuit;
-    [SerializeField] private Danger.DangerType dangerType;
     
     private Transform player;
     private CableHolder nearbyCable = null;
@@ -231,14 +229,39 @@ public class ServerConnection : MonoBehaviour
     void OnCablePluggedIn()
     {
         TileManager tileManager = FindFirstObjectByType<TileManager>();
-        tileManager?.SetupDangers(dangerType);
-        tileManager?.SetupLights(tileLightCircuit);
-        // Add your game logic here
-        // Examples:
-        // - Enable power to something
-        // - Unlock a door
-        // - Start a puzzle sequence
-        // - etc.
+        
+        // Automatyczne mapowanie koloru kabla na światła i zagrożenia
+        Tile.LightCircuit circuit = GetLightCircuitFromColor(serverColor);
+        Danger.DangerType danger = GetDangerTypeFromColor(serverColor);
+        
+        tileManager?.SetupLights(circuit);
+        tileManager?.SetupDangers(danger);
+        
+        Debug.Log($"Kabel {serverColor} podłączony - włączam światła {circuit} i zagrożenia {danger}");
+    }
+    
+    Tile.LightCircuit GetLightCircuitFromColor(CableColor color)
+    {
+        return color switch
+        {
+            CableColor.Yellow => Tile.LightCircuit.Yellow,
+            CableColor.Red => Tile.LightCircuit.Red,
+            CableColor.Green => Tile.LightCircuit.Green,
+            CableColor.Blue => Tile.LightCircuit.Blue,
+            _ => Tile.LightCircuit.White
+        };
+    }
+    
+    Danger.DangerType GetDangerTypeFromColor(CableColor color)
+    {
+        return color switch
+        {
+            CableColor.Yellow => Danger.DangerType.Fire,
+            CableColor.Red => Danger.DangerType.Mechanic,
+            CableColor.Green => Danger.DangerType.Toxic,
+            CableColor.Blue => Danger.DangerType.Electric,
+            _ => Danger.DangerType.Fire
+        };
     }
     
     void DisconnectCableFromServer()
@@ -256,7 +279,7 @@ public class ServerConnection : MonoBehaviour
             connectedIndicator.SetActive(false);
         }
         
-        Debug.Log("Cable disconnected from server. Take it back to holder.");
+        Debug.Log($"Kabel {serverColor} odłączony - wyłączam światła i zagrożenia");
         FindFirstObjectByType<TileManager>()?.ClearAll();
     }
     

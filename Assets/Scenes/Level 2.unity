@@ -523,6 +523,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6159681358828705983, guid: b26a66db29c234e3b936e96589118b88, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 8213123176862021704, guid: b26a66db29c234e3b936e96589118b88, type: 3}
       propertyPath: m_Name
       value: DangerYellow
@@ -7059,6 +7063,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6159681358828705983, guid: b26a66db29c234e3b936e96589118b88, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 8213123176862021704, guid: b26a66db29c234e3b936e96589118b88, type: 3}
       propertyPath: m_Name
       value: DangerYellow (2)
@@ -8826,9 +8834,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1235797733701301818, guid: 0fc5e65dea3bb989bad0218107861a8c, type: 3}
+      propertyPath: cableColor
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1736032206301719786, guid: 0fc5e65dea3bb989bad0218107861a8c, type: 3}
       propertyPath: m_Name
       value: ServerRoom
+      objectReference: {fileID: 0}
+    - target: {fileID: 3827850088750119060, guid: 0fc5e65dea3bb989bad0218107861a8c, type: 3}
+      propertyPath: serverColor
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4090422275919776507, guid: 0fc5e65dea3bb989bad0218107861a8c, type: 3}
+      propertyPath: cableColor
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4437427309430124172, guid: 0fc5e65dea3bb989bad0218107861a8c, type: 3}
+      propertyPath: serverColor
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5353903555030199022, guid: 0fc5e65dea3bb989bad0218107861a8c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8869,6 +8893,14 @@ PrefabInstance:
     - target: {fileID: 5353903555030199022, guid: 0fc5e65dea3bb989bad0218107861a8c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5446527165208599867, guid: 0fc5e65dea3bb989bad0218107861a8c, type: 3}
+      propertyPath: cableColor
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8447873090959435495, guid: 0fc5e65dea3bb989bad0218107861a8c, type: 3}
+      propertyPath: serverColor
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11002,6 +11034,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2442688520090699556, guid: b26a66db29c234e3b936e96589118b88, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6159681358828705983, guid: b26a66db29c234e3b936e96589118b88, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
