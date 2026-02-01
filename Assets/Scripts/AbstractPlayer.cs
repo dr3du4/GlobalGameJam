@@ -14,7 +14,7 @@ public abstract class AbstractPlayer : MonoBehaviour
     private string idleName = "idle";
     private string actionName = "action";
     private string hitName = "hit";
-    
+    private string deathName = "hit";
     private Animator currentAnimator;
 
     void Awake()
@@ -25,6 +25,12 @@ public abstract class AbstractPlayer : MonoBehaviour
     protected void SetDefaultAnim()
     {
         SetActiveAnimation(frontAnimator);
+    }
+
+    protected void PlayDeathAnim()
+    {
+        SetActiveAnimation(frontAnimator);
+        currentAnimator.Play(deathName);
     }
 
     void Update()

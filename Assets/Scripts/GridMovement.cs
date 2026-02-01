@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GridMovement : AbstractPlayer
 {
@@ -10,6 +12,7 @@ public class GridMovement : AbstractPlayer
     
     private Vector3 targetPosition;
     private bool isMoving = false;
+    private bool isDead = false;
 
     void Awake()
     {
@@ -65,11 +68,22 @@ public class GridMovement : AbstractPlayer
         }
         Vector3 moveDirection3D = (targetPosition - transform.position).normalized;
         UpdateAnimationDirection(new Vector2(moveDirection3D.x, moveDirection3D.z));
+
+        if (isDead)
+        {
+            transform.localScale += Vector3.one * 2 * Time.deltaTime;
+            // transform.Rotate(Vector3.down, 360 * 10 * Time.deltaTime);
+        }
     }
 
     public void HandleDangerCollision(Danger danger)
     {
-        SetDefaultAnim();
-        Debug.Log($"Collided with danger of type: {danger.Type} on circuit: {danger.LightCircuit}");
+        if (!isDead)
+        {
+            isDead = true;
+            Debug.Log("Player hit danger!");
+            PlayDeathAnim();
+            GameManager.instance.DeathHandler();
+        }
     }
 }

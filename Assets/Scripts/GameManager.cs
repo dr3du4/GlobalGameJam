@@ -1,5 +1,7 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -59,5 +61,17 @@ public class GameManager : MonoBehaviour
         secondCamera.enabled = true;
         if (FindFirstObjectByType<GridMovement>() is GridMovement gridMovement) gridMovement.enabled = true;
         if (FindFirstObjectByType<MovementSpine>() is MovementSpine movementSpine) movementSpine.enabled = false;
+    }
+
+    public void DeathHandler()
+    {
+        StartCoroutine(DeathCoroutine());
+    }
+
+    private IEnumerator DeathCoroutine()
+    {
+        yield return new WaitForSeconds(1f);
+        Debug.Log("Restarting level...");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

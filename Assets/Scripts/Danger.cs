@@ -30,7 +30,10 @@ public class Danger : MonoBehaviour
     {
         dangerCollider = GetComponent<Collider>();
         // (chosenDangerObject, anim2DObject) = dangerList.InstantiateRandomDanger(transform);
-        anim2DObject?.SetActive(false);
+        if (anim2DObject != null)
+        {
+            anim2DObject?.SetActive(false);
+        }
         
         // inactiveDangerMeshRenderer = inactiveDangerModel.GetComponent<MeshRenderer>();
 
@@ -89,8 +92,11 @@ public class Danger : MonoBehaviour
 
     private void UpdateVisibility()
     {
-        anim2DObject?.SetActive(isDangerVisible && isDangerActive);
-        if (closestTile.Circuit != Tile.LightCircuit.Gray)
+        if (anim2DObject != null)
+        {
+            anim2DObject?.SetActive(isDangerVisible && isDangerActive);
+        }
+        if (closestTile && closestTile.Circuit != Tile.LightCircuit.Gray)
         {
             closestTile?.gameObject?.SetActive(!isDangerVisible);
         }

@@ -8,6 +8,10 @@ public class TileManager : MonoBehaviour
     {
         tiles = FindObjectsByType<Tile>(FindObjectsSortMode.None);
         dangers = FindObjectsByType<Danger>(FindObjectsSortMode.None);
+    }
+
+    void Start()
+    {
         foreach (var tile in tiles)
         {
             tile.SetTileVisible(false);
