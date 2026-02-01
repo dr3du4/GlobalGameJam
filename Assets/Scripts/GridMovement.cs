@@ -35,6 +35,7 @@ public class GridMovement : AbstractPlayer
                 moveDirection = new Vector3(0, 0, Mathf.Sign(input.y));
             
             bool hit = Physics.Raycast(transform.position + Vector3.up * 0.5f, moveDirection, out RaycastHit hitInfo, gridSize, LayerMask.GetMask("walls"));
+            
             if (moveDirection != Vector3.zero && !hit)
             {
                 Vector3 newPosition = transform.position + moveDirection * gridSize;
@@ -52,6 +53,13 @@ public class GridMovement : AbstractPlayer
                     targetPosition = newPosition;
                     isMoving = true;
                 }
+                else
+                {
+                    MusicManager.I?.PlaySFX(MusicManager.I.cantGoThere);   
+                }
+            } else if (hit)
+            {
+                MusicManager.I?.PlaySFX(MusicManager.I.cantGoThere);
             }
         }
         else

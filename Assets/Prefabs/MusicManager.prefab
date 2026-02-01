@@ -914,7 +914,7 @@ GameObject:
   - component: {fileID: 3077797520024278017}
   - component: {fileID: 1253480678077474454}
   m_Layer: 0
-  m_Name: Audio Source (4)
+  m_Name: CantGoThere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -946,7 +946,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 668496320fb1761ad9ed5da8ab9a4138, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1479,6 +1479,7 @@ MonoBehaviour:
   MenuMusicSource: {fileID: 1562406945549104507}
   looseMusicSource: {fileID: 3840151322635892193}
   winMusicSource: {fileID: 2198434895656854607}
+  cantGoThere: {fileID: 1253480678077474454}
 --- !u!1 &7009782528586994053
 GameObject:
   m_ObjectHideFlags: 0

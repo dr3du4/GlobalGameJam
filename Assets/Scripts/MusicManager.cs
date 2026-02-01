@@ -7,6 +7,7 @@ public class MusicManager : MonoBehaviour
     public AudioSource MenuMusicSource;
     public AudioSource looseMusicSource;
     public AudioSource winMusicSource;
+    public AudioSource cantGoThere;
 
     void Awake()
     {
