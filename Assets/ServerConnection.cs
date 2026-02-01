@@ -9,8 +9,10 @@ public class ServerConnection : MonoBehaviour
     public bool isCableConnected = false;
     
     [Header("Visual Feedback")]
-    public GameObject connectedIndicator; // Optional: object to show when connected
-    public string emissiveMaterialName = "emmisive"; // Name of the emissive material
+    public GameObject connectedIndicator;
+    public string emissiveMaterialName = "emmisive";
+    
+    [Header("Network Settings")]
     [SerializeField] private Tile.LightCircuit tileLightCircuit;
     [SerializeField] private Danger.DangerType dangerType;
     
@@ -21,10 +23,8 @@ public class ServerConnection : MonoBehaviour
     
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
-        GameManager.instance.inputActions.Player.Interact.performed += OnInteractPressed;
+        FindOperatorPlayer();
         
-        // Make sure this object has the "Server" tag
         if (!gameObject.CompareTag("Server"))
         {
             Debug.LogWarning($"{gameObject.name} should have 'Server' tag!");
@@ -35,20 +35,47 @@ public class ServerConnection : MonoBehaviour
             connectedIndicator.SetActive(false);
         }
         
-        // Find and update emissive material color
         FindAndUpdateEmissiveMaterial();
+    }
+    
+    void FindOperatorPlayer()
+    {
+        // Szukaj Operatora - gracza z MovementSpine
+        MovementSpine[] operators = FindObjectsByType<MovementSpine>(FindObjectsSortMode.None);
+        foreach (var op in operators)
+        {
+            var netObj = op.GetComponent<Unity.Netcode.NetworkObject>();
+            if (netObj != null)
+            {
+                if (netObj.IsOwner)
+                {
+                    player = op.transform;
+                    return;
+                }
+            }
+            else
+            {
+                player = op.transform;
+                return;
+            }
+        }
+        
+        // Fallback
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null)
+        {
+            player = playerObj.transform;
+        }
     }
     
     void FindAndUpdateEmissiveMaterial()
     {
-        // Get all renderers in this object and children
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
         
         foreach (Renderer renderer in renderers)
         {
             foreach (Material mat in renderer.materials)
             {
-                // Check if material name contains "emmisive" or "emissive"
                 if (mat.name.ToLower().Contains("emmisive") || mat.name.ToLower().Contains("emissive"))
                 {
                     emissiveMaterial = mat;
@@ -57,8 +84,6 @@ public class ServerConnection : MonoBehaviour
                 }
             }
         }
-        
-        Debug.LogWarning($"Emissive material not found on {gameObject.name}");
     }
     
     void UpdateEmissiveColor()
@@ -66,68 +91,55 @@ public class ServerConnection : MonoBehaviour
         if (emissiveMaterial == null) return;
         
         Color color = GetColorFromEnum(serverColor);
-        
-        // Set base color
         emissiveMaterial.color = color;
         emissiveMaterial.SetColor("_Color", color);
-        
-        // Set emission color for glow effect
         emissiveMaterial.EnableKeyword("_EMISSION");
-        emissiveMaterial.SetColor("_EmissionColor", color * 2f); // Brighter emission
+        emissiveMaterial.SetColor("_EmissionColor", color * 2f);
     }
     
     Color GetColorFromEnum(CableColor color)
     {
-        switch (color)
+        return color switch
         {
-            case CableColor.Yellow:
-                return new Color(1f, 0.92f, 0.016f); // Bright yellow
-            case CableColor.Red:
-                return new Color(1f, 0f, 0f); // Pure red
-            case CableColor.Green:
-                return new Color(0f, 1f, 0f); // Pure green
-            case CableColor.Blue:
-                return new Color(0f, 0.5f, 1f); // Bright blue
-            default:
-                return Color.white;
-        }
+            CableColor.Yellow => new Color(1f, 0.92f, 0.016f),
+            CableColor.Red => new Color(1f, 0f, 0f),
+            CableColor.Green => new Color(0f, 1f, 0f),
+            CableColor.Blue => new Color(0f, 0.5f, 1f),
+            _ => Color.white
+        };
     }
     
     void Update()
     {
-        if (player == null) return;
+        if (player == null)
+        {
+            FindOperatorPlayer();
+            if (player == null) return;
+        }
         
-        // Check distance to player
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         isPlayerNearby = distanceToPlayer <= connectionRange;
         
-        // Only interact with the CLOSEST server
         bool isClosest = IsClosestServer();
         
-        // Check if player is holding a cable (when not connected)
+        // Podłączenie kabla - E
         if (isPlayerNearby && isClosest && !isCableConnected)
         {
             FindNearbyCable();
             
-            // Try to connect cable with E key
             if (nearbyCable != null && Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
             {
                 if (nearbyCable.IsCableHeld() && !nearbyCable.IsCableConnected())
                 {
-                    // Check color compatibility before connecting
                     if (nearbyCable.GetCableColor() == serverColor)
                     {
                         ConnectCable();
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"Color mismatch! Cable is {nearbyCable.GetCableColor()}, server requires {serverColor}");
                     }
                 }
             }
         }
         
-        // Disconnect cable with F key when connected
+        // Odłączenie kabla - F
         if (isPlayerNearby && isClosest && isCableConnected)
         {
             if (Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame)
@@ -139,7 +151,7 @@ public class ServerConnection : MonoBehaviour
     
     bool IsClosestServer()
     {
-        if (!isPlayerNearby) return false;
+        if (!isPlayerNearby || player == null) return false;
         
         ServerConnection[] allServers = FindObjectsByType<ServerConnection>(FindObjectsSortMode.None);
         float myDistance = Vector3.Distance(transform.position, player.position);
@@ -151,41 +163,15 @@ public class ServerConnection : MonoBehaviour
             float otherDistance = Vector3.Distance(server.transform.position, player.position);
             if (otherDistance <= server.connectionRange && otherDistance < myDistance)
             {
-                return false; // Found a closer one
+                return false;
             }
         }
         
-        return true; // This is the closest
-    }
-
-    private void OnInteractPressed(InputAction.CallbackContext context)
-    {
-        if (isPlayerNearby && IsClosestServer())
-        {
-            FindNearbyCable();
-            
-            // Try to connect cable
-            if (nearbyCable != null)
-            {
-                if (nearbyCable.IsCableHeld() && !nearbyCable.IsCableConnected())
-                {
-                    // Check color compatibility before connecting
-                    if (nearbyCable.GetCableColor() == serverColor)
-                    {
-                        ConnectCable();
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"Color mismatch! Cable is {nearbyCable.GetCableColor()}, server requires {serverColor}");
-                    }
-                }
-            }
-        }
+        return true;
     }
     
     void FindNearbyCable()
     {
-        // Find all CableHolders in the scene
         CableHolder[] cables = FindObjectsByType<CableHolder>(FindObjectsSortMode.None);
         
         nearbyCable = null;
@@ -211,9 +197,6 @@ public class ServerConnection : MonoBehaviour
             connectedIndicator.SetActive(true);
         }
         
-        Debug.Log($"Cable connected to {gameObject.name}!");
-        
-        // Call any game logic here
         OnCablePluggedIn();
     }
     
@@ -230,20 +213,26 @@ public class ServerConnection : MonoBehaviour
     
     void OnCablePluggedIn()
     {
+        // Sprawdź czy jesteśmy w trybie multiplayer
+        if (Unity.Netcode.NetworkManager.Singleton != null && Unity.Netcode.NetworkManager.Singleton.IsClient)
+        {
+            // Multiplayer - wyślij przez NetworkCableInteraction
+            var networkInteraction = GetComponent<NetworkCableInteraction>();
+            if (networkInteraction != null)
+            {
+                networkInteraction.OnCableConnected();
+                return;
+            }
+        }
+        
+        // Single player lub brak NetworkCableInteraction - zmień lokalnie
         TileManager tileManager = FindFirstObjectByType<TileManager>();
         tileManager?.SetupDangers(dangerType);
         tileManager?.SetupLights(tileLightCircuit);
-        // Add your game logic here
-        // Examples:
-        // - Enable power to something
-        // - Unlock a door
-        // - Start a puzzle sequence
-        // - etc.
     }
     
     void DisconnectCableFromServer()
     {
-        // Player presses F at server - takes cable from server
         if (nearbyCable != null)
         {
             nearbyCable.DisconnectFromServer();
@@ -256,13 +245,28 @@ public class ServerConnection : MonoBehaviour
             connectedIndicator.SetActive(false);
         }
         
-        Debug.Log("Cable disconnected from server. Take it back to holder.");
+        OnCableUnplugged();
+    }
+    
+    void OnCableUnplugged()
+    {
+        // Sprawdź czy jesteśmy w trybie multiplayer
+        if (Unity.Netcode.NetworkManager.Singleton != null && Unity.Netcode.NetworkManager.Singleton.IsClient)
+        {
+            var networkInteraction = GetComponent<NetworkCableInteraction>();
+            if (networkInteraction != null)
+            {
+                networkInteraction.OnCableDisconnected();
+                return;
+            }
+        }
+        
+        // Single player - wyczyść lokalnie
         FindFirstObjectByType<TileManager>()?.ClearAll();
     }
     
     public void DisconnectCable()
     {
-        // Complete disconnect (used when resetting)
         if (nearbyCable != null)
         {
             nearbyCable.DisconnectCable();
@@ -276,41 +280,25 @@ public class ServerConnection : MonoBehaviour
             connectedIndicator.SetActive(false);
         }
         
-        Debug.Log("Cable disconnected from server");
-        FindFirstObjectByType<TileManager>()?.ClearAll();
+        OnCableUnplugged();
     }
+    
+    // Publiczne właściwości dla NetworkCableInteraction
+    public Tile.LightCircuit TileLightCircuit => tileLightCircuit;
+    public Danger.DangerType DangerType => dangerType;
     
     void OnValidate()
     {
-        // Update colors when values change in inspector
         if (Application.isPlaying)
         {
             FindAndUpdateEmissiveMaterial();
         }
     }
     
-    // Visual feedback in editor
     void OnDrawGizmos()
     {
-        // Draw gizmo with server color
-        Color gizmoColor = Color.white;
-        switch (serverColor)
-        {
-            case CableColor.Yellow:
-                gizmoColor = Color.yellow;
-                break;
-            case CableColor.Red:
-                gizmoColor = Color.red;
-                break;
-            case CableColor.Green:
-                gizmoColor = Color.green;
-                break;
-            case CableColor.Blue:
-                gizmoColor = Color.blue;
-                break;
-        }
+        Color gizmoColor = GetColorFromEnum(serverColor);
         
-        // Brighter when connected or when this is the closest server to player
         bool isClosest = IsClosestServer();
         if (isCableConnected)
             Gizmos.color = gizmoColor;
@@ -322,4 +310,3 @@ public class ServerConnection : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, connectionRange);
     }
 }
-

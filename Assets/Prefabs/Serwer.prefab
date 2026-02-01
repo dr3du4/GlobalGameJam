@@ -10,31 +10,31 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 667619f974b20f94f914c8def5fdfdf8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 53.280922
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 667619f974b20f94f914c8def5fdfdf8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 29.297806
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 667619f974b20f94f914c8def5fdfdf8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 39.00957
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 667619f974b20f94f914c8def5fdfdf8, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -4.3297806e-17
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 667619f974b20f94f914c8def5fdfdf8, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -4.3297806e-17
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 667619f974b20f94f914c8def5fdfdf8, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.7071068
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 667619f974b20f94f914c8def5fdfdf8, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.7071068
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 667619f974b20f94f914c8def5fdfdf8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Serwer
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 667619f974b20f94f914c8def5fdfdf8, type: 3}
+      propertyPath: m_TagString
+      value: Server
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -62,6 +66,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 667619f974b20f94f914c8def5fdfdf8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4444802421081032649}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 667619f974b20f94f914c8def5fdfdf8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1221755940189503661}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 667619f974b20f94f914c8def5fdfdf8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 394043190972506946}
   m_SourcePrefab: {fileID: 100100000, guid: 667619f974b20f94f914c8def5fdfdf8, type: 3}
 --- !u!1 &4870720130711453047 stripped
 GameObject:
@@ -105,5 +115,45 @@ MonoBehaviour:
   serverColor: 0
   isCableConnected: 0
   connectedIndicator: {fileID: 0}
+  emissiveMaterialName: emmisive
   tileLightCircuit: 0
   dangerType: 0
+--- !u!114 &1221755940189503661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4870720130711453047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 2481134870
+  InScenePlacedSourceGlobalObjectIdHash: 20969948
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!114 &394043190972506946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4870720130711453047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a603144d236da5b449eec6697f35e68a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkCableInteraction
+  ShowTopMostFoldoutHeaderGroup: 1
+  connectionIndicator: {fileID: 0}

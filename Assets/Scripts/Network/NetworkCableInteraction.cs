@@ -2,22 +2,17 @@ using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
-/// Komponent do dodania na ServerConnection.
+/// Komponent sieciowy do dodania na obiekty z ServerConnection.
 /// Gdy kabel zostanie podłączony, wysyła info do serwera,
 /// który informuje Runnera o zmianie świateł/hazardów.
 /// </summary>
 public class NetworkCableInteraction : NetworkBehaviour
 {
-    [Header("Kolor Obwodu")]
-    [Tooltip("Który kolor świateł/hazardów włączyć u Runnera")]
-    [SerializeField] private Tile.LightCircuit lightCircuit;
-    
-    [Header("Typ Zagrożenia")]
-    [Tooltip("Jaki typ hazardu aktywować")]
-    [SerializeField] private Danger.DangerType dangerType;
-
     [Header("Visual Feedback")]
     [SerializeField] private GameObject connectionIndicator;
+
+    // Pobieramy dane z ServerConnection (jeden źródło prawdy)
+    private ServerConnection serverConnection;
 
     // Stan synchronizowany przez sieć
     private NetworkVariable<bool> isConnected = new NetworkVariable<bool>(
@@ -25,6 +20,11 @@ public class NetworkCableInteraction : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
+
+    private void Awake()
+    {
+        serverConnection = GetComponent<ServerConnection>();
+    }
 
     private void Start()
     {
@@ -44,41 +44,40 @@ public class NetworkCableInteraction : NetworkBehaviour
     public void OnCableConnected()
     {
         if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsClient) return;
+        if (serverConnection == null) return;
 
-        Debug.Log($"[NetworkCableInteraction] Kabel podłączony - wysyłam {lightCircuit}");
         RequestConnectionServerRpc(true);
     }
 
     /// <summary>
-    /// Wywoływane przez ServerConnection.DisconnectCable()
+    /// Wywoływane przez ServerConnection.OnCableUnplugged()
     /// </summary>
     public void OnCableDisconnected()
     {
         if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsClient) return;
 
-        Debug.Log($"[NetworkCableInteraction] Kabel odłączony");
         RequestConnectionServerRpc(false);
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void RequestConnectionServerRpc(bool connected, ServerRpcParams rpcParams = default)
     {
-        // Aktualizuj stan sieciowy
         isConnected.Value = connected;
 
-        // Wyślij zmianę do Runnera
+        if (serverConnection == null) return;
+
         if (connected)
         {
-            // Włącz światła i hazardy danego koloru
-            SetLightsAndHazardsClientRpc((int)lightCircuit, (int)dangerType);
+            // Wyślij info o włączeniu świateł/hazardów do Runnera
+            SetLightsAndHazardsClientRpc(
+                (int)serverConnection.TileLightCircuit, 
+                (int)serverConnection.DangerType
+            );
         }
         else
         {
-            // Wyczyść wszystko
             ClearLightsAndHazardsClientRpc();
         }
-
-        Debug.Log($"[Server] Kabel {(connected ? "podłączony" : "odłączony")} - {lightCircuit}");
     }
 
     [ClientRpc]
@@ -89,8 +88,6 @@ public class NetworkCableInteraction : NetworkBehaviour
         {
             return;
         }
-
-        Debug.Log($"[Runner] Włączam światła: {(Tile.LightCircuit)circuit}, hazardy: {(Danger.DangerType)danger}");
 
         // Znajdź TileManager i zastosuj zmiany
         TileManager tileManager = FindFirstObjectByType<TileManager>();
@@ -117,8 +114,6 @@ public class NetworkCableInteraction : NetworkBehaviour
             return;
         }
 
-        Debug.Log("[Runner] Czyszczę światła i hazardy");
-
         TileManager tileManager = FindFirstObjectByType<TileManager>();
         tileManager?.ClearAll();
 
@@ -140,5 +135,4 @@ public class NetworkCableInteraction : NetworkBehaviour
     }
 
     public bool IsConnected => isConnected.Value;
-    public Tile.LightCircuit Circuit => lightCircuit;
 }

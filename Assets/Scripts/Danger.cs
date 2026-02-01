@@ -23,14 +23,17 @@ public class Danger : MonoBehaviour
     void Awake()
     {
         dangerCollider = GetComponent<Collider>();
-        dangerMeshRenderer = GetComponent<MeshRenderer>();
-        playerCollider = FindFirstObjectByType<MovementSpine>()?.GetComponent<Collider>();
-        chosenDangerObject = dangerList.InstantiateRandomDanger(transform);
-        dangerMeshRenderer = chosenDangerObject.GetComponent<MeshRenderer>();
+        
+        // Instantiate random danger - zwraca tuple (hazardObj, anim2DObj)
         (chosenDangerObject, anim2DObject) = dangerList.InstantiateRandomDanger(transform);
-        anim2DObject?.gameObject.SetActive(false);
-        dangerMeshRenderer = chosenDangerObject.GetComponent<MeshRenderer>();
-        initialScaleY = chosenDangerObject.transform.localScale.y;
+        
+        if (chosenDangerObject != null)
+        {
+            dangerMeshRenderer = chosenDangerObject.GetComponent<MeshRenderer>();
+            initialScaleY = chosenDangerObject.transform.localScale.y;
+        }
+        
+        anim2DObject?.SetActive(false);
     }
 
     void Start()
@@ -40,10 +43,11 @@ public class Danger : MonoBehaviour
 
     void Update()
     {
+        if (chosenDangerObject == null) return;
+        
         if (isDangerActive)
         {
-            float scaleY = 
-                initialScaleY * (1f + 0.1f * Mathf.Sin(Time.time * 5f));
+            float scaleY = initialScaleY * (1f + 0.1f * Mathf.Sin(Time.time * 5f));
             Vector3 localScale = chosenDangerObject.transform.localScale;
             localScale.z = scaleY;
             chosenDangerObject.transform.localScale = localScale;
@@ -58,7 +62,7 @@ public class Danger : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (dangerCollider.enabled && dangerCollider.bounds.Intersects(playerCollider.bounds))
+        if (playerCollider != null && dangerCollider.enabled && dangerCollider.bounds.Intersects(playerCollider.bounds))
         {
             playerCollider.GetComponent<GridMovement>()?.HandleDangerCollision(this);
         }
@@ -73,7 +77,10 @@ public class Danger : MonoBehaviour
 
     public void SetDangerVisible(bool isVisible)
     {
-        dangerMeshRenderer.enabled = isVisible;
+        if (dangerMeshRenderer != null)
+        {
+            dangerMeshRenderer.enabled = isVisible;
+        }
         isDangerVisible = isVisible;
         anim2DObject?.SetActive(isDangerVisible && isDangerActive);
     }
