@@ -6578,6 +6578,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 509561986161637197, guid: 575124b744fedafcfa3df34172e6d0ea, type: 3}
   m_PrefabInstance: {fileID: 728956024}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &730190072
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4903761864253475483, guid: f7b619b696135209db2ea4f5c20dbd78, type: 3}
+      propertyPath: m_Name
+      value: Background (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7921074863044676124, guid: f7b619b696135209db2ea4f5c20dbd78, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -24
+      objectReference: {fileID: 0}
+    - target: {fileID: 7921074863044676124, guid: f7b619b696135209db2ea4f5c20dbd78, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.56
+      objectReference: {fileID: 0}
+    - target: {fileID: 7921074863044676124, guid: f7b619b696135209db2ea4f5c20dbd78, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 4.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 7921074863044676124, guid: f7b619b696135209db2ea4f5c20dbd78, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.915099
+      objectReference: {fileID: 0}
+    - target: {fileID: 7921074863044676124, guid: f7b619b696135209db2ea4f5c20dbd78, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.2690099
+      objectReference: {fileID: 0}
+    - target: {fileID: 7921074863044676124, guid: f7b619b696135209db2ea4f5c20dbd78, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.2882002
+      objectReference: {fileID: 0}
+    - target: {fileID: 7921074863044676124, guid: f7b619b696135209db2ea4f5c20dbd78, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.08466488
+      objectReference: {fileID: 0}
+    - target: {fileID: 7921074863044676124, guid: f7b619b696135209db2ea4f5c20dbd78, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7921074863044676124, guid: f7b619b696135209db2ea4f5c20dbd78, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7921074863044676124, guid: f7b619b696135209db2ea4f5c20dbd78, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f7b619b696135209db2ea4f5c20dbd78, type: 3}
 --- !u!1001 &731596944
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8891,25 +8948,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1235797733701301818, guid: 0fc5e65dea3bb989bad0218107861a8c, type: 3}
-      propertyPath: cableColor
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1736032206301719786, guid: 0fc5e65dea3bb989bad0218107861a8c, type: 3}
       propertyPath: m_Name
       value: ServerRoom
-      objectReference: {fileID: 0}
-    - target: {fileID: 3827850088750119060, guid: 0fc5e65dea3bb989bad0218107861a8c, type: 3}
-      propertyPath: serverColor
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4090422275919776507, guid: 0fc5e65dea3bb989bad0218107861a8c, type: 3}
-      propertyPath: cableColor
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4437427309430124172, guid: 0fc5e65dea3bb989bad0218107861a8c, type: 3}
-      propertyPath: serverColor
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5353903555030199022, guid: 0fc5e65dea3bb989bad0218107861a8c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8950,14 +8991,6 @@ PrefabInstance:
     - target: {fileID: 5353903555030199022, guid: 0fc5e65dea3bb989bad0218107861a8c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8447873090959435495, guid: 0fc5e65dea3bb989bad0218107861a8c, type: 3}
-      propertyPath: serverColor
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8945719671512997994, guid: 0fc5e65dea3bb989bad0218107861a8c, type: 3}
-      propertyPath: cableColor
-      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -19397,3 +19430,4 @@ SceneRoots:
   - {fileID: 1052335511}
   - {fileID: 411481832}
   - {fileID: 9103976870414997089}
+  - {fileID: 730190072}
