@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu.unity
     guid: 79307189724431e40941c2f8f9b353f2
   - enabled: 1
+    path: Assets/Scenes/Cutscenka.unity
+    guid: 1fdef2e94fc5d8e41a44262ab4cb2921
+  - enabled: 0
     path: Assets/Scenes/Level 1.unity
     guid: 18b3954af70c6639cb42359f2319aa30
   - enabled: 1
