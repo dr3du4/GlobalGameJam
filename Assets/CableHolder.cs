@@ -75,34 +75,38 @@ public class CableHolder : MonoBehaviour
     
     void FindOperatorPlayer()
     {
-        // Szukaj Operatora - gracza z MovementSpine
-        MovementSpine[] operators = FindObjectsByType<MovementSpine>(FindObjectsSortMode.None);
-        foreach (var op in operators)
+        // Szukaj LOKALNEGO gracza - sprawdź NetworkObject.IsOwner
+        var networkObjects = FindObjectsByType<Unity.Netcode.NetworkObject>(FindObjectsSortMode.None);
+        Debug.Log($"[CableHolder] Szukam lokalnego gracza, znalazłem {networkObjects.Length} NetworkObject");
+        
+        foreach (var netObj in networkObjects)
         {
-            // W multiplayer sprawdź czy to lokalny gracz
-            var netObj = op.GetComponent<Unity.Netcode.NetworkObject>();
-            if (netObj != null)
+            // Sprawdź czy to nasz gracz (IsOwner) i czy ma MovementSpine (Operator)
+            if (netObj.IsOwner)
             {
-                if (netObj.IsOwner)
+                var movement = netObj.GetComponent<MovementSpine>();
+                if (movement != null && movement.enabled)
                 {
-                    player = op.transform;
+                    Debug.Log($"[CableHolder] ✅ Znalazłem lokalnego Operatora: {netObj.gameObject.name}");
+                    player = netObj.transform;
                     return;
                 }
             }
-            else
+        }
+        
+        // Fallback dla single player - szukaj aktywnego MovementSpine
+        MovementSpine[] operators = FindObjectsByType<MovementSpine>(FindObjectsSortMode.None);
+        foreach (var op in operators)
+        {
+            if (op.enabled)
             {
-                // Single player - użyj pierwszego znalezionego
+                Debug.Log($"[CableHolder] Fallback SP - znalazłem: {op.gameObject.name}");
                 player = op.transform;
                 return;
             }
         }
         
-        // Fallback - szukaj po tagu
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-        {
-            player = playerObj.transform;
-        }
+        Debug.LogWarning("[CableHolder] ❌ Nie znaleziono Operatora! (Kable są tylko dla Operatora)");
     }
     
     void FindAndUpdateEmissiveMaterial()
@@ -151,8 +155,10 @@ public class CableHolder : MonoBehaviour
         // E - podniesienie kabla
         if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
         {
+            Debug.Log($"[CableHolder] E pressed! isPlayerNearby={isPlayerNearby}, isClosest={isClosest}, isCableHeld={isCableHeld}, connectedServer={connectedServer != null}");
             if (isPlayerNearby && isClosest && !isCableHeld && connectedServer == null)
             {
+                Debug.Log("[CableHolder] ✅ Podbieram kabel!");
                 PickUpCable();
             }
         }

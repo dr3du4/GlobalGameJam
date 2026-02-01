@@ -40,32 +40,38 @@ public class ServerConnection : MonoBehaviour
     
     void FindOperatorPlayer()
     {
-        // Szukaj Operatora - gracza z MovementSpine
-        MovementSpine[] operators = FindObjectsByType<MovementSpine>(FindObjectsSortMode.None);
-        foreach (var op in operators)
+        // Szukaj LOKALNEGO gracza - sprawdź NetworkObject.IsOwner
+        var networkObjects = FindObjectsByType<Unity.Netcode.NetworkObject>(FindObjectsSortMode.None);
+        Debug.Log($"[ServerConnection] Szukam lokalnego gracza, znalazłem {networkObjects.Length} NetworkObject");
+        
+        foreach (var netObj in networkObjects)
         {
-            var netObj = op.GetComponent<Unity.Netcode.NetworkObject>();
-            if (netObj != null)
+            // Sprawdź czy to nasz gracz (IsOwner) i czy ma MovementSpine (Operator)
+            if (netObj.IsOwner)
             {
-                if (netObj.IsOwner)
+                var movement = netObj.GetComponent<MovementSpine>();
+                if (movement != null && movement.enabled)
                 {
-                    player = op.transform;
+                    Debug.Log($"[ServerConnection] ✅ Znalazłem lokalnego Operatora: {netObj.gameObject.name}");
+                    player = netObj.transform;
                     return;
                 }
             }
-            else
+        }
+        
+        // Fallback dla single player - szukaj aktywnego MovementSpine
+        MovementSpine[] operators = FindObjectsByType<MovementSpine>(FindObjectsSortMode.None);
+        foreach (var op in operators)
+        {
+            if (op.enabled)
             {
+                Debug.Log($"[ServerConnection] Fallback SP - znalazłem: {op.gameObject.name}");
                 player = op.transform;
                 return;
             }
         }
         
-        // Fallback
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-        {
-            player = playerObj.transform;
-        }
+        Debug.LogWarning("[ServerConnection] ❌ Nie znaleziono Operatora! (Serwery są tylko dla Operatora)");
     }
     
     void FindAndUpdateEmissiveMaterial()
@@ -129,11 +135,18 @@ public class ServerConnection : MonoBehaviour
             
             if (nearbyCable != null && Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
             {
+                Debug.Log($"[ServerConnection] E przy serwerze! nearbyCable.IsCableHeld={nearbyCable.IsCableHeld()}, nearbyCable.IsCableConnected={nearbyCable.IsCableConnected()}, cableColor={nearbyCable.GetCableColor()}, serverColor={serverColor}");
+                
                 if (nearbyCable.IsCableHeld() && !nearbyCable.IsCableConnected())
                 {
                     if (nearbyCable.GetCableColor() == serverColor)
                     {
+                        Debug.Log("[ServerConnection] ✅ Podłączam kabel do serwera!");
                         ConnectCable();
+                    }
+                    else
+                    {
+                        Debug.Log($"[ServerConnection] ❌ Kolory nie pasują! kabel={nearbyCable.GetCableColor()}, serwer={serverColor}");
                     }
                 }
             }
@@ -213,19 +226,29 @@ public class ServerConnection : MonoBehaviour
     
     void OnCablePluggedIn()
     {
+        Debug.Log($"[ServerConnection] OnCablePluggedIn! NetworkManager={Unity.Netcode.NetworkManager.Singleton != null}, IsClient={Unity.Netcode.NetworkManager.Singleton?.IsClient}");
+        
         // Sprawdź czy jesteśmy w trybie multiplayer
         if (Unity.Netcode.NetworkManager.Singleton != null && Unity.Netcode.NetworkManager.Singleton.IsClient)
         {
             // Multiplayer - wyślij przez NetworkCableInteraction
             var networkInteraction = GetComponent<NetworkCableInteraction>();
+            Debug.Log($"[ServerConnection] NetworkCableInteraction = {networkInteraction != null}");
+            
             if (networkInteraction != null)
             {
+                Debug.Log("[ServerConnection] ✅ Wysyłam przez sieć!");
                 networkInteraction.OnCableConnected();
                 return;
+            }
+            else
+            {
+                Debug.LogWarning("[ServerConnection] ❌ Brak NetworkCableInteraction na tym serwerze!");
             }
         }
         
         // Single player lub brak NetworkCableInteraction - zmień lokalnie
+        Debug.Log("[ServerConnection] Tryb single player - zmieniam lokalnie");
         TileManager tileManager = FindFirstObjectByType<TileManager>();
         tileManager?.SetupDangers(dangerType);
         tileManager?.SetupLights(tileLightCircuit);

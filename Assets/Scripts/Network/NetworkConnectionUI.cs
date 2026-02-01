@@ -255,34 +255,68 @@ public class NetworkConnectionUI : MonoBehaviour
 
     private void StartIPHost()
     {
+        Debug.Log("[NetworkConnectionUI] === STARTING IP HOST ===");
         ConfigureIPTransport();
 
-        if (NetworkManager.Singleton.StartHost())
+        // Dodaj callback na połączenie
+        NetworkManager.Singleton.OnClientConnectedCallback += OnIPClientConnected;
+        
+        Debug.Log("[NetworkConnectionUI] Wywołuję StartHost()...");
+        bool success = NetworkManager.Singleton.StartHost();
+        Debug.Log($"[NetworkConnectionUI] StartHost() = {success}");
+        Debug.Log($"[NetworkConnectionUI] IsServer={NetworkManager.Singleton.IsServer}, IsHost={NetworkManager.Singleton.IsHost}");
+        
+        if (success)
         {
-            SetStatus("Hosting! Czekam na gracza...");
-            ShowWaitingPanel("Jesteś RUNNEREM\nCzekam na Operatora...");
+            string ip = ipAddressInput != null ? ipAddressInput.text : defaultIP;
+            string port = portInput != null ? portInput.text : defaultPort.ToString();
+            
+            SetStatus($"Host aktywny na {ip}:{port}");
+            ShowWaitingPanel($"Jesteś RUNNEREM\n\n🌐 IP: 127.0.0.1:{port}\n\nCzekam na Operatora...");
+            Debug.Log($"[NetworkConnectionUI] ✅ Host uruchomiony! Nasłuchuje na porcie {port}");
         }
         else
         {
-            SetStatus("Błąd hostowania!");
+            SetStatus("❌ Błąd hostowania!");
             SetButtonsInteractable(true);
+            Debug.LogError("[NetworkConnectionUI] ❌ StartHost() zwróciło false!");
         }
+    }
+    
+    private void OnIPClientConnected(ulong clientId)
+    {
+        Debug.Log($"[NetworkConnectionUI] 🔗 Klient {clientId} połączony przez IP!");
     }
 
     private void StartIPClient()
     {
-        SetStatus("Łączenie...");
+        Debug.Log("[NetworkConnectionUI] === STARTING IP CLIENT ===");
+        
+        string ip = ipAddressInput != null ? ipAddressInput.text : defaultIP;
+        string port = portInput != null ? portInput.text : defaultPort.ToString();
+        
+        SetStatus($"Łączenie z {ip}:{port}...");
         SetButtonsInteractable(false);
         ConfigureIPTransport();
 
-        if (NetworkManager.Singleton.StartClient())
+        Debug.Log($"[NetworkConnectionUI] Wywołuję StartClient()...");
+        bool success = NetworkManager.Singleton.StartClient();
+        Debug.Log($"[NetworkConnectionUI] StartClient() = {success}");
+        Debug.Log($"[NetworkConnectionUI] IsClient={NetworkManager.Singleton.IsClient}");
+        
+        if (success)
         {
-            ShowWaitingPanel("Łączenie z serwerem...");
+            // Ukryj Steam Code display w trybie IP
+            if (lobbyCodeDisplay != null) lobbyCodeDisplay.gameObject.SetActive(false);
+            
+            ShowWaitingPanel($"Łączenie z {ip}:{port}...\n\nJesteś OPERATOREM");
+            Debug.Log($"[NetworkConnectionUI] ⏳ Klient startuje, łączenie z {ip}:{port}...");
         }
         else
         {
-            SetStatus("Błąd połączenia!");
+            SetStatus("❌ Błąd połączenia!");
             SetButtonsInteractable(true);
+            Debug.LogError("[NetworkConnectionUI] ❌ StartClient() zwróciło false!");
         }
     }
 
@@ -297,9 +331,14 @@ public class NetworkConnectionUI : MonoBehaviour
             SetStatus("❌ Brak UnityTransport!");
             return;
         }
+
+        // Pobierz aktualny transport
+        var currentTransport = NetworkManager.Singleton.NetworkConfig.NetworkTransport;
+        Debug.Log($"[NetworkConnectionUI] Aktualny transport: {(currentTransport != null ? currentTransport.GetType().Name : "NULL")}");
         
         // Ustaw UnityTransport jako aktywny transport
         NetworkManager.Singleton.NetworkConfig.NetworkTransport = transport;
+        Debug.Log($"[NetworkConnectionUI] ✅ Ustawiono transport na: {transport.GetType().Name}");
         
         string ip = ipAddressInput != null ? ipAddressInput.text : defaultIP;
         ushort port = defaultPort;
@@ -309,8 +348,13 @@ public class NetworkConnectionUI : MonoBehaviour
             port = parsedPort;
         }
 
-        Debug.Log($"[NetworkConnectionUI] IP Mode: {ip}:{port}");
-        transport.SetConnectionData(ip, port);
+        // Konfiguruj UnityTransport
+        transport.ConnectionData.Address = ip;
+        transport.ConnectionData.Port = port;
+        transport.ConnectionData.ServerListenAddress = "0.0.0.0"; // Nasłuchuj na wszystkich interfejsach
+        
+        Debug.Log($"[NetworkConnectionUI] 🌐 IP Mode skonfigurowany: {ip}:{port}");
+        Debug.Log($"[NetworkConnectionUI] ServerListenAddress: {transport.ConnectionData.ServerListenAddress}");
     }
 
     #endregion
@@ -353,9 +397,21 @@ public class NetworkConnectionUI : MonoBehaviour
 
     private void OnClientConnected(ulong clientId)
     {
+        Debug.Log($"[NetworkConnectionUI] OnClientConnected: clientId={clientId}, LocalClientId={NetworkManager.Singleton.LocalClientId}");
+        
+        // Dla klienta (Operatora) - ukryj UI gdy się połączy
+        if (clientId == NetworkManager.Singleton.LocalClientId && !NetworkManager.Singleton.IsHost)
+        {
+            Debug.Log("[NetworkConnectionUI] Klient połączony - ukrywam UI");
+            SetStatus("Połączono! Jesteś Operatorem.");
+            Invoke(nameof(HideAllPanels), 1f);
+        }
+        
+        // Dla hosta - ukryj UI gdy obaj gracze połączeni
         if (NetworkManager.Singleton.IsHost)
         {
             int playerCount = NetworkManager.Singleton.ConnectedClientsList.Count;
+            Debug.Log($"[NetworkConnectionUI] Host: liczba graczy = {playerCount}");
             
             if (playerCount >= 2)
             {
@@ -404,6 +460,12 @@ public class NetworkConnectionUI : MonoBehaviour
         if (connectionPanel != null) connectionPanel.SetActive(false);
         if (waitingPanel != null) waitingPanel.SetActive(true);
         if (waitingText != null) waitingText.text = message;
+        
+        // Ukryj Steam code display w trybie IP
+        if (!useSteam && lobbyCodeDisplay != null)
+        {
+            lobbyCodeDisplay.gameObject.SetActive(false);
+        }
     }
 
     private void HideAllPanels()

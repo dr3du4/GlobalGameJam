@@ -98,11 +98,12 @@ public class NetworkGameManager : NetworkBehaviour
         AssignRole(clientId);
 
         Debug.Log($"[NetworkGameManager] Liczba graczy: {playerRoles.Count}, GameActive: {isGameActive.Value}");
+        Debug.Log($"[NetworkGameManager] RunnerClientId: {runnerClientId.Value}, OperatorClientId: {operatorClientId.Value}");
         
         // Start gdy obaj gracze połączeni
         if (playerRoles.Count >= 2 && !isGameActive.Value)
         {
-            Debug.Log("[NetworkGameManager] 🎮 Startujemy grę!");
+            Debug.Log("[NetworkGameManager] 🎮 Startujemy grę! Obaj gracze połączeni.");
             StartGame();
         }
     }
@@ -151,23 +152,27 @@ public class NetworkGameManager : NetworkBehaviour
     {
         if (!IsServer) return;
 
+        Debug.Log($"[NetworkGameManager] 🎭 Spawnuję gracza: ClientId={clientId}, Role={role}");
+
         Transform spawnPoint = role == PlayerRole.Runner ? runnerSpawnPoint : operatorSpawnPoint;
         GameObject prefab = role == PlayerRole.Runner ? runnerPrefab : operatorPrefab;
 
         if (prefab == null)
         {
-            Debug.LogError($"[NetworkGameManager] Brak prefaba dla {role}!");
+            Debug.LogError($"[NetworkGameManager] ❌ Brak prefaba dla {role}! Ustaw go w inspektorze.");
             return;
         }
 
         if (spawnPoint == null)
         {
-            Debug.LogError($"[NetworkGameManager] Brak spawn pointu dla {role}!");
+            Debug.LogError($"[NetworkGameManager] ❌ Brak spawn pointu dla {role}! Ustaw go w inspektorze.");
             return;
         }
 
         Vector3 spawnPosition = spawnPoint.position;
         Quaternion spawnRotation = spawnPoint.rotation;
+
+        Debug.Log($"[NetworkGameManager] Spawn position: {spawnPosition}, Prefab: {prefab.name}");
 
         GameObject playerObj = Instantiate(prefab, spawnPosition, spawnRotation);
         playerObj.name = $"{role}Player_{clientId}";
@@ -177,10 +182,11 @@ public class NetworkGameManager : NetworkBehaviour
         if (netObj != null)
         {
             netObj.SpawnAsPlayerObject(clientId);
+            Debug.Log($"[NetworkGameManager] ✅ Gracz {role} zespawnowany dla clientId {clientId}!");
         }
         else
         {
-            Debug.LogError($"[NetworkGameManager] Prefab {prefab.name} nie ma komponentu NetworkObject!");
+            Debug.LogError($"[NetworkGameManager] ❌ Prefab {prefab.name} nie ma komponentu NetworkObject!");
             Destroy(playerObj);
         }
     }

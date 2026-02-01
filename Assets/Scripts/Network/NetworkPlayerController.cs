@@ -3,7 +3,8 @@ using UnityEngine;
 
 /// <summary>
 /// Bazowy kontroler dla graczy w multiplayer.
-/// Włącza odpowiedni skrypt ruchu i konfiguruje kamerę.
+/// Włącza odpowiedni skrypt ruchu i aktywuje kamerę.
+/// Kamery są już skonfigurowane w scenie przez programistę.
 /// </summary>
 public class NetworkPlayerController : NetworkBehaviour
 {
@@ -14,11 +15,6 @@ public class NetworkPlayerController : NetworkBehaviour
     [Header("Camera Settings")]
     [SerializeField] private string operatorCameraTag = "OperatorCamera";
     [SerializeField] private string runnerCameraTag = "GridCamera";
-    
-    [Header("Camera Follow Settings (identyczne dla obu kamer)")]
-    [SerializeField] private Vector3 cameraOffset = new Vector3(0, 10, -10);
-    [SerializeField] private float cameraSmoothSpeed = 5f;
-    [SerializeField] private bool cameraLookAtTarget = true;
 
     private Camera assignedCamera;
     private InputSystem_Actions inputActions;
@@ -102,7 +98,7 @@ public class NetworkPlayerController : NetworkBehaviour
     }
     
     /// <summary>
-    /// Wspólna metoda do ustawiania kamery - identyczne zachowanie dla obu graczy
+    /// Aktywuje odpowiednią kamerę - kamery są już skonfigurowane w scenie.
     /// </summary>
     private void SetupCamera(string cameraTag)
     {
@@ -110,31 +106,18 @@ public class NetworkPlayerController : NetworkBehaviour
         
         if (cameraObj == null)
         {
-            Debug.LogError($"[NetworkPlayerController] Brak kamery z tagiem: {cameraTag}");
+            Debug.LogWarning($"[NetworkPlayerController] Brak kamery z tagiem: {cameraTag} - używam domyślnej");
             return;
         }
 
         cameraObj.SetActive(true);
         assignedCamera = cameraObj.GetComponent<Camera>();
         
-        if (assignedCamera == null)
+        if (assignedCamera != null)
         {
-            Debug.LogError($"[NetworkPlayerController] Obiekt {cameraObj.name} nie ma komponentu Camera!");
-            return;
+            assignedCamera.enabled = true;
+            Debug.Log($"[NetworkPlayerController] ✅ Aktywowano kamerę: {cameraObj.name}");
         }
-
-        assignedCamera.enabled = true;
-        
-        // Dodaj lub pobierz CameraFollow
-        CameraFollow follow = assignedCamera.GetComponent<CameraFollow>();
-        if (follow == null)
-        {
-            follow = assignedCamera.gameObject.AddComponent<CameraFollow>();
-        }
-        
-        // Ustaw IDENTYCZNE parametry dla obu kamer
-        follow.target = transform;
-        follow.Configure(cameraOffset, cameraSmoothSpeed, cameraLookAtTarget);
     }
 
     private void DisableNonOwnerComponents()

@@ -43,9 +43,20 @@ public class NetworkCableInteraction : NetworkBehaviour
     /// </summary>
     public void OnCableConnected()
     {
-        if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsClient) return;
-        if (serverConnection == null) return;
+        Debug.Log($"[NetworkCableInteraction] OnCableConnected! NetworkManager={NetworkManager.Singleton != null}, IsClient={NetworkManager.Singleton?.IsClient}");
+        
+        if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsClient)
+        {
+            Debug.LogWarning("[NetworkCableInteraction] ❌ Brak NetworkManager lub nie jesteśmy klientem!");
+            return;
+        }
+        if (serverConnection == null)
+        {
+            Debug.LogWarning("[NetworkCableInteraction] ❌ Brak ServerConnection!");
+            return;
+        }
 
+        Debug.Log($"[NetworkCableInteraction] ✅ Wysyłam ServerRpc! Circuit={serverConnection.TileLightCircuit}, Danger={serverConnection.DangerType}");
         RequestConnectionServerRpc(true);
     }
 
@@ -62,12 +73,19 @@ public class NetworkCableInteraction : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void RequestConnectionServerRpc(bool connected, ServerRpcParams rpcParams = default)
     {
+        Debug.Log($"[NetworkCableInteraction] 📡 ServerRpc otrzymany! connected={connected}");
+        
         isConnected.Value = connected;
 
-        if (serverConnection == null) return;
+        if (serverConnection == null)
+        {
+            Debug.LogWarning("[NetworkCableInteraction] ❌ serverConnection == null na serwerze!");
+            return;
+        }
 
         if (connected)
         {
+            Debug.Log($"[NetworkCableInteraction] ✅ Wysyłam ClientRpc: circuit={(int)serverConnection.TileLightCircuit}, danger={(int)serverConnection.DangerType}");
             // Wyślij info o włączeniu świateł/hazardów do Runnera
             SetLightsAndHazardsClientRpc(
                 (int)serverConnection.TileLightCircuit, 
@@ -76,6 +94,7 @@ public class NetworkCableInteraction : NetworkBehaviour
         }
         else
         {
+            Debug.Log("[NetworkCableInteraction] Wysyłam ClearLightsAndHazardsClientRpc");
             ClearLightsAndHazardsClientRpc();
         }
     }
@@ -83,16 +102,25 @@ public class NetworkCableInteraction : NetworkBehaviour
     [ClientRpc]
     private void SetLightsAndHazardsClientRpc(int circuit, int danger)
     {
+        Debug.Log($"[NetworkCableInteraction] 📥 ClientRpc otrzymany! circuit={circuit}, danger={danger}");
+        
         // Tylko Runner przetwarza to
+        bool isRunner = NetworkGameManager.Instance == null || NetworkGameManager.Instance.IsLocalPlayerRunner();
+        Debug.Log($"[NetworkCableInteraction] IsLocalPlayerRunner = {isRunner}");
+        
         if (NetworkGameManager.Instance != null && !NetworkGameManager.Instance.IsLocalPlayerRunner())
         {
+            Debug.Log("[NetworkCableInteraction] Nie jestem Runnerem - ignoruję");
             return;
         }
 
         // Znajdź TileManager i zastosuj zmiany
         TileManager tileManager = FindFirstObjectByType<TileManager>();
+        Debug.Log($"[NetworkCableInteraction] TileManager = {tileManager != null}");
+        
         if (tileManager != null)
         {
+            Debug.Log($"[NetworkCableInteraction] ✅ Ustawiam światła={circuit}, zagrożenia={danger}");
             tileManager.SetupLights((Tile.LightCircuit)circuit);
             tileManager.SetupDangers((Danger.DangerType)danger);
         }

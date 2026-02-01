@@ -236,7 +236,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1accf1378347b6e4b89ddb979d911904, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CableHolder
-  interactionRange: 0.8
+  interactionRange: 1
   cableColor: 0
   cableSplineContainer: {fileID: 999799225914693665}
   cableSag: 0.2
