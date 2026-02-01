@@ -26,6 +26,11 @@ public class GameManager : MonoBehaviour
         SwitchToCableEnjoyer();
     }
 
+    void Start()
+    {
+        MusicManager.I?.PlayGameplayMusic();
+    }
+
     void OnSpacePressed(InputAction.CallbackContext context)
     {
         SwitchPlayer();
@@ -68,6 +73,7 @@ public class GameManager : MonoBehaviour
     public void DeathHandler()
     {
         StartCoroutine(DeathCoroutine());
+        MusicManager.I?.PlaySFX(MusicManager.I.looseMusicSource);
     }
 
     private IEnumerator DeathCoroutine()
@@ -83,6 +89,7 @@ public class GameManager : MonoBehaviour
         {
             isNextLevelCalled = true;
             StartCoroutine(NextLevelCoroutine());
+            MusicManager.I?.PlaySFX(MusicManager.I.winMusicSource);
         }
     }
 
