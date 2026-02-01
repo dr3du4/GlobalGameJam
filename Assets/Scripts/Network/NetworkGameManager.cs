@@ -90,13 +90,19 @@ public class NetworkGameManager : NetworkBehaviour
 
     private void OnClientConnected(ulong clientId)
     {
+        Debug.Log($"[NetworkGameManager] 🔌 Klient połączony! ClientId: {clientId}, IsServer: {IsServer}");
+        
         if (!IsServer) return;
 
+        Debug.Log($"[NetworkGameManager] Przydzielam rolę dla clientId: {clientId}");
         AssignRole(clientId);
 
+        Debug.Log($"[NetworkGameManager] Liczba graczy: {playerRoles.Count}, GameActive: {isGameActive.Value}");
+        
         // Start gdy obaj gracze połączeni
         if (playerRoles.Count >= 2 && !isGameActive.Value)
         {
+            Debug.Log("[NetworkGameManager] 🎮 Startujemy grę!");
             StartGame();
         }
     }
